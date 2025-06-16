@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Memory MCP - 记忆管理</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Simple Memory MCP</h1>
+            <p>记忆管理系统</p>
+        </header>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索记忆..." />
+                <button id="searchBtn">🔍</button>
+                <button id="clearSearchBtn">✖️</button>
+            </div>
+            <button id="addMemoryBtn" class="btn-primary">➕ 添加记忆</button>
+        </div>
+
+        <div class="stats">
+            <span id="memoryCount">加载中...</span>
+        </div>
+
+        <div id="memoriesList" class="memories-list">
+            <!-- 记忆列表将在这里动态加载 -->
+        </div>
+
+        <div id="loadingIndicator" class="loading">
+            <div class="spinner"></div>
+            <p>加载中...</p>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📝</div>
+            <h3>还没有记忆</h3>
+            <p>点击"添加记忆"按钮创建您的第一个记忆</p>
+        </div>
+    </div>
+
+    <!-- 添加/编辑记忆模态框 -->
+    <div id="memoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">添加记忆</h2>
+                <button class="close-btn" id="closeModalBtn">✖️</button>
+            </div>
+            <form id="memoryForm">
+                <div class="form-group">
+                    <label for="memoryTitleInput">标题 *</label>
+                    <input type="text" id="memoryTitleInput" required maxlength="200" />
+                </div>
+                <div class="form-group">
+                    <label for="memoryContentInput">内容 *</label>
+                    <textarea id="memoryContentInput" required rows="10"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelBtn" class="btn-secondary">取消</button>
+                    <button type="submit" id="saveBtn" class="btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 删除确认模态框 -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>确认删除</h2>
+                <button class="close-btn" id="closeDeleteModalBtn">✖️</button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除记忆 "<span id="deleteMemoryTitle"></span>" 吗？</p>
+                <p class="warning">此操作无法撤销！</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="cancelDeleteBtn" class="btn-secondary">取消</button>
+                <button type="button" id="confirmDeleteBtn" class="btn-danger">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 记忆详情模态框 -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="viewModalTitle">记忆详情</h2>
+                <div class="modal-actions">
+                    <button id="editFromViewBtn" class="btn-secondary">✏️ 编辑</button>
+                    <button class="close-btn" id="closeViewModalBtn">✖️</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="memory-meta">
+                    <span id="viewMemoryDate"></span>
+                </div>
+                <div id="viewMemoryContent" class="memory-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
