@@ -43,12 +43,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/simple-memory-mcp.git"
+    "url": "https://github.com/eragonht1/simple-memory-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/simple-memory-mcp/issues"
+    "url": "https://github.com/eragonht1/simple-memory-mcp/issues"
   },
-  "homepage": "https://github.com/yourusername/simple-memory-mcp#readme",
+  "homepage": "https://github.com/eragonht1/simple-memory-mcp#readme",
   "jest": {
     "testEnvironment": "node",
     "testMatch": [
