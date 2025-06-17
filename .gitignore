@@ -110,8 +110,44 @@ pids
 ehthumbs.db
 Thumbs.db
 
-# Database files (keep structure but ignore data)
-# data/*.db
+# Database files and private data (keep structure but ignore data)
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+data/memories.db
+data/memories.json
+data/config.json
+data/user-data.json
+
+# Any JSON files in data directory that might contain private data
+data/*.json
+
+# Backup files of databases
+data/*.db.bak
+data/*.sqlite.bak
+data/*.json.bak
+
+# Log files that might contain sensitive information
+logs/
+*.log
+app.log
+error.log
+combined.log
+
+# Environment files with sensitive configuration
+.env.local
+.env.development
+.env.staging
+.env.production.local
+
+# User-specific configuration files
+config/user.json
+config/local.json
+user-config.json
+
+# Backup directories
+backups/
+backup/
 
 # Backup files
 *.bak
