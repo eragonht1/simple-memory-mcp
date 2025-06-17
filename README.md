@@ -74,7 +74,7 @@ Open browser and visit: `http://localhost:5566`
    - Search for "MCP" or "Model Context Protocol"
 
 2. **Add MCP Server Configuration**
-   Add to Cursor MCP configuration:
+   In Cursor MCP configuration:
    ```json
    {
      "mcpServers": {
@@ -88,7 +88,6 @@ Open browser and visit: `http://localhost:5566`
    ```
 
 3. **Restart Cursor**
-   Restart Cursor after configuration to load MCP server
 
 ### Configure Claude Desktop
 
@@ -111,6 +110,82 @@ Open browser and visit: `http://localhost:5566`
    ```
 
 3. **Restart Claude Desktop**
+
+### Configure Augment
+
+1. **Find Augment MCP Configuration**
+   - Open Augment settings
+   - Navigate to MCP configuration section
+
+2. **Add MCP Server Configuration**
+   
+   **Option 1: Using startup script (Recommended)**
+   ```json
+   {
+     "mcpServers": {
+       "simple-memory": {
+         "command": "G:\\docker\\McpApi\\simple-memory-mcp\\start-mcp.bat",
+         "args": []
+       }
+     }
+   }
+   ```
+   
+   **Option 2: Using absolute path**
+   ```json
+   {
+     "mcpServers": {
+       "simple-memory": {
+         "command": "node",
+         "args": ["G:\\docker\\McpApi\\simple-memory-mcp\\src\\server.js"],
+         "cwd": "G:\\docker\\McpApi\\simple-memory-mcp"
+       }
+     }
+   }
+   ```
+   
+   **Option 3: Using npm script**
+   ```json
+   {
+     "mcpServers": {
+       "simple-memory": {
+         "command": "npm",
+         "args": ["start"],
+         "cwd": "G:\\docker\\McpApi\\simple-memory-mcp"
+       }
+     }
+   }
+   ```
+
+3. **Restart Augment**
+
+### Troubleshooting
+
+If you encounter issues with MCP configuration:
+
+1. **Verify Node.js Installation**
+   ```bash
+   node --version
+   npm --version
+   ```
+
+2. **Check Project Path**
+   ```bash
+   cd G:\docker\McpApi\simple-memory-mcp
+   dir src\server.js
+   ```
+
+3. **Test Manual Startup**
+   ```bash
+   cd G:\docker\McpApi\simple-memory-mcp
+   node src/server.js
+   ```
+
+4. **Common Issues**
+   - **Path not found**: Use absolute paths in configuration
+   - **Permission denied**: Ensure AI tool has access to project directory
+   - **Module not found**: Run `npm install` in project directory
+   - **Port conflicts**: Check if port 5566 is available for web interface
 
 ### Verify Configuration
 
@@ -176,7 +251,10 @@ simple-memory-mcp/
 │   ├── 🚀 DEPLOYMENT.md     # Deployment guide
 │   └── 🔧 DEVELOPMENT.md    # Development docs
 ├── 📁 scripts/              # Utility scripts
-│   └── 🔨 init-database.js  # Database initialization
+│   ├── 🔨 init-database.js  # Database initialization
+│   └── 🚀 deploy.js         # Deployment script
+├── 📄 start-mcp.bat         # Windows MCP startup script
+├── 📄 start-mcp.sh          # Unix MCP startup script
 ├── 📄 package.json          # Project configuration
 ├── 📄 README.md             # Project documentation
 └── 📄 LICENSE               # Open source license
@@ -196,6 +274,7 @@ simple-memory-mcp/
 - [📚 API Documentation](docs/API.md) - MCP tools and REST API docs
 - [🚀 Deployment Guide](docs/DEPLOYMENT.md) - Production deployment guide
 - [🔧 Development Docs](docs/DEVELOPMENT.md) - Developer guide and architecture
+- [🤖 Augment Configuration](docs/AUGMENT_CONFIG.md) - Detailed Augment setup guide
 
 ## 🧪 Testing
 

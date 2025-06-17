@@ -344,6 +344,84 @@ CREATE INDEX idx_memories_created_at ON memories(created_at);
 - 使用HTTPS加密传输
 - 限制API访问频率
 
+## AI工具配置
+
+### 配置Augment
+
+1. **找到Augment MCP配置**
+   - 打开Augment设置
+   - 导航到MCP配置部分
+
+2. **添加MCP服务器配置**
+
+   **选项1：使用启动脚本（推荐）**
+   ```json
+   {
+     "mcpServers": {
+       "simple-memory": {
+         "command": "G:\\docker\\McpApi\\simple-memory-mcp\\start-mcp.bat",
+         "args": []
+       }
+     }
+   }
+   ```
+
+   **选项2：使用绝对路径**
+   ```json
+   {
+     "mcpServers": {
+       "simple-memory": {
+         "command": "node",
+         "args": ["G:\\docker\\McpApi\\simple-memory-mcp\\src\\server.js"],
+         "cwd": "G:\\docker\\McpApi\\simple-memory-mcp"
+       }
+     }
+   }
+   ```
+
+   **选项3：使用npm脚本**
+   ```json
+   {
+     "mcpServers": {
+       "simple-memory": {
+         "command": "npm",
+         "args": ["start"],
+         "cwd": "G:\\docker\\McpApi\\simple-memory-mcp"
+       }
+     }
+   }
+   ```
+
+3. **重启Augment**
+
+### 故障排除
+
+如果遇到MCP配置问题：
+
+1. **验证Node.js安装**
+   ```bash
+   node --version
+   npm --version
+   ```
+
+2. **检查项目路径**
+   ```bash
+   cd G:\docker\McpApi\simple-memory-mcp
+   dir src\server.js
+   ```
+
+3. **手动测试启动**
+   ```bash
+   cd G:\docker\McpApi\simple-memory-mcp
+   node src/server.js
+   ```
+
+4. **常见问题**
+   - **路径未找到**: 在配置中使用绝对路径
+   - **权限被拒绝**: 确保AI工具有权限访问项目目录
+   - **模块未找到**: 在项目目录中运行 `npm install`
+   - **端口冲突**: 检查端口5566是否可用于Web界面
+
 ## 维护指南
 
 ### 定期维护任务
