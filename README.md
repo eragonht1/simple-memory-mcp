@@ -118,7 +118,7 @@ Open browser and visit: `http://localhost:5566`
    - Navigate to MCP configuration section
 
 2. **Add MCP Server Configuration**
-   
+
    **Option 1: Using startup script (Recommended)**
    ```json
    {
@@ -130,7 +130,7 @@ Open browser and visit: `http://localhost:5566`
      }
    }
    ```
-   
+
    **Option 2: Using absolute path**
    ```json
    {
@@ -143,7 +143,7 @@ Open browser and visit: `http://localhost:5566`
      }
    }
    ```
-   
+
    **Option 3: Using npm script**
    ```json
    {
@@ -277,6 +277,7 @@ simple-memory-mcp/
 - [🚀 Deployment Guide](docs/DEPLOYMENT.md) - Production deployment guide
 - [🔧 Development Docs](docs/DEVELOPMENT.md) - Developer guide and architecture
 - [🤖 Augment Configuration](docs/AUGMENT_CONFIG.md) - Detailed Augment setup guide
+- [🛡️ Data Privacy Protection](DATA_PRIVACY.md) - Privacy protection measures and security guidelines
 
 ## 🧪 Testing
 
