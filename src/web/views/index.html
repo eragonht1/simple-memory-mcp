@@ -4,42 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Memory MCP - 记忆管理</title>
+    <!-- Material-UI CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <!-- 使用本地CSS样式 -->
     <link rel="stylesheet" href="/styles.css">
+
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🧠 Simple Memory MCP</h1>
-            <p>记忆管理系统</p>
+        <!-- 应用栏 -->
+        <header class="app-bar">
+            <div class="app-bar-content">
+                <div class="app-title">
+                    <h1>🧠 Simple Memory MCP</h1>
+                    <span class="subtitle">记忆管理系统</span>
+                </div>
+            </div>
         </header>
 
-        <div class="toolbar">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜索记忆..." />
-                <button id="searchBtn">🔍</button>
-                <button id="clearSearchBtn">✖️</button>
+        <!-- 搜索栏和统计信息 -->
+        <div class="search-stats-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="material-icons search-icon">search</span>
+                    <input type="text" id="searchInput" placeholder="搜索记忆..." />
+                    <button id="clearSearchBtn" class="clear-btn" style="display: none;">
+                        <span class="material-icons">clear</span>
+                    </button>
+                </div>
+                <button id="searchBtn" class="search-action-btn">
+                    <span class="material-icons">search</span>
+                </button>
+                <button id="addMemoryBtn" class="add-action-btn">
+                    <span class="material-icons">add</span>
+                </button>
             </div>
-            <button id="addMemoryBtn" class="btn-primary">➕ 添加记忆</button>
+            <div class="stats-card">
+                <div class="stats-content">
+                    <span class="stats-label">总记忆数量</span>
+                    <span id="memoryCount" class="stats-value">0</span>
+                    <span id="searchResults" class="stats-search" style="display: none;"></span>
+                </div>
+            </div>
         </div>
 
-        <div class="stats">
-            <span id="memoryCount">加载中...</span>
+        <!-- 记忆列表 -->
+        <div id="memoriesList" class="memories-grid">
+            <!-- 记忆卡片将在这里动态加载 -->
         </div>
 
-        <div id="memoriesList" class="memories-list">
-            <!-- 记忆列表将在这里动态加载 -->
-        </div>
-
-        <div id="loadingIndicator" class="loading">
-            <div class="spinner"></div>
+        <!-- 加载状态 -->
+        <div id="loadingIndicator" class="loading-container">
+            <div class="loading-spinner"></div>
             <p>加载中...</p>
         </div>
 
+        <!-- 空状态 -->
         <div id="emptyState" class="empty-state" style="display: none;">
             <div class="empty-icon">📝</div>
             <h3>还没有记忆</h3>
-            <p>点击"添加记忆"按钮创建您的第一个记忆</p>
+            <p id="emptyMessage">点击右下角的按钮创建您的第一个记忆</p>
         </div>
+
+
     </div>
 
     <!-- 添加/编辑记忆模态框 -->
@@ -47,7 +75,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">添加记忆</h2>
-                <button class="close-btn" id="closeModalBtn">✖️</button>
+                <button class="icon-btn" id="closeModalBtn">
+                    <span class="material-icons">close</span>
+                </button>
             </div>
             <form id="memoryForm">
                 <div class="form-group">
@@ -56,56 +86,76 @@
                 </div>
                 <div class="form-group">
                     <label for="memoryContentInput">内容 *</label>
-                    <textarea id="memoryContentInput" required rows="10"></textarea>
+                    <textarea id="memoryContentInput" required rows="8"></textarea>
                 </div>
                 <div class="form-actions">
-                    <button type="button" id="cancelBtn" class="btn-secondary">取消</button>
-                    <button type="submit" id="saveBtn" class="btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-secondary">取消</button>
+                    <button type="submit" id="saveBtn" class="btn btn-primary">
+                        <span class="material-icons">save</span>
+                        保存
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- 查看记忆模态框 -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>记忆详情</h2>
+                <div class="modal-actions">
+                    <button id="editFromViewBtn" class="icon-btn">
+                        <span class="material-icons">edit</span>
+                    </button>
+                    <button class="icon-btn" id="closeViewModalBtn">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h3 id="viewModalTitle"></h3>
+                <div id="viewMemoryDate" class="memory-meta"></div>
+                <div id="viewMemoryContent" class="memory-content-view"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- 删除确认模态框 -->
     <div id="deleteModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-small">
             <div class="modal-header">
-                <h2>确认删除</h2>
-                <button class="close-btn" id="closeDeleteModalBtn">✖️</button>
+                <div class="warning-header">
+                    <span class="material-icons warning-icon">warning</span>
+                    <h2>确认删除</h2>
+                </div>
+                <button class="icon-btn" id="closeDeleteModalBtn">
+                    <span class="material-icons">close</span>
+                </button>
             </div>
             <div class="modal-body">
                 <p>确定要删除记忆 "<span id="deleteMemoryTitle"></span>" 吗？</p>
-                <p class="warning">此操作无法撤销！</p>
+                <p class="warning-text">此操作无法撤销！</p>
             </div>
             <div class="form-actions">
-                <button type="button" id="cancelDeleteBtn" class="btn-secondary">取消</button>
-                <button type="button" id="confirmDeleteBtn" class="btn-danger">删除</button>
+                <button type="button" id="cancelDeleteBtn" class="btn btn-secondary">取消</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
+                    <span class="material-icons">delete</span>
+                    删除
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- 记忆详情模态框 -->
-    <div id="viewModal" class="modal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h2 id="viewModalTitle">记忆详情</h2>
-                <div class="modal-actions">
-                    <button id="editFromViewBtn" class="btn-secondary">✏️ 编辑</button>
-                    <button class="close-btn" id="closeViewModalBtn">✖️</button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="memory-meta">
-                    <span id="viewMemoryDate"></span>
-                </div>
-                <div id="viewMemoryContent" class="memory-content"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 消息提示 -->
+    <!-- 消息提示容器 -->
     <div id="messageContainer" class="message-container"></div>
 
     <script src="/script.js"></script>
+
+
+</body>
+</html>
+
+
 </body>
 </html>

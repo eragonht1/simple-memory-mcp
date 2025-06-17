@@ -255,6 +255,8 @@ simple-memory-mcp/
 │   └── 🚀 deploy.js         # Deployment script
 ├── 📄 start-mcp.bat         # Windows MCP startup script
 ├── 📄 start-mcp.sh          # Unix MCP startup script
+├── 📄 start-web.bat         # Windows Web startup script
+├── 📄 start-web.sh          # Unix Web startup script
 ├── 📄 package.json          # Project configuration
 ├── 📄 README.md             # Project documentation
 └── 📄 LICENSE               # Open source license
@@ -264,7 +266,7 @@ simple-memory-mcp/
 
 - **🔙 Backend**: Node.js + Express.js
 - **🗄️ Database**: SQLite3
-- **🎨 Frontend**: Native HTML/CSS/JavaScript
+- **🎨 Frontend**: Material Design with HTML/CSS/JavaScript
 - **📡 Protocol**: Model Context Protocol (MCP)
 - **🔗 Communication**: JSON-RPC 2.0, REST API
 
