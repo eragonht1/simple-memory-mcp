@@ -3,13 +3,15 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
 import database from '../database.js';
+import { portManager } from '../services/PortManager.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 5566;
+let PORT = null; // 将由PortManager动态分配
 
 // 中间件
 app.use(cors());
@@ -182,6 +184,70 @@ app.post('/api/memories/reorder', async (req, res) => {
     }
 });
 
+// 获取本机局域网IP地址
+function getLocalIP() {
+    const interfaces = os.networkInterfaces();
+    const candidates = [];
+
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            // 跳过内部地址、IPv6地址和虚拟网卡
+            if (iface.family === 'IPv4' && !iface.internal) {
+                const ip = iface.address;
+
+                // 优先选择常见的局域网IP段
+                if (ip.startsWith('192.168.') || ip.startsWith('10.') || ip.startsWith('172.')) {
+                    candidates.push({
+                        ip: ip,
+                        interface: name,
+                        priority: ip.startsWith('192.168.') ? 1 : 2 // 192.168.x.x 优先级最高
+                    });
+                } else if (!ip.startsWith('169.254.')) {
+                    // 其他非链路本地地址
+                    candidates.push({
+                        ip: ip,
+                        interface: name,
+                        priority: 3
+                    });
+                }
+            }
+        }
+    }
+
+    // 按优先级排序，选择最佳IP
+    if (candidates.length > 0) {
+        candidates.sort((a, b) => a.priority - b.priority);
+        const selected = candidates[0];
+        console.log(`🌐 检测到局域网IP: ${selected.ip} (接口: ${selected.interface})`);
+        return selected.ip;
+    }
+
+    console.warn('⚠️ 未能检测到局域网IP，使用localhost');
+    return 'localhost'; // 备用地址
+}
+
+// 获取系统信息（包括端口信息）
+app.get('/api/system/info', async (req, res) => {
+    try {
+        const allocatedPorts = portManager.getAllocatedPorts();
+        const localIP = getLocalIP();
+
+        const systemInfo = {
+            currentPort: PORT,
+            localIP: localIP,
+            lanUrl: `http://${localIP}:${PORT}`,
+            allocatedPorts: Object.fromEntries(allocatedPorts),
+            timestamp: new Date().toISOString(),
+            version: '1.2.0'
+        };
+
+        res.json({ success: true, systemInfo });
+    } catch (error) {
+        console.error('获取系统信息失败:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // 错误处理中间件
 app.use((err, req, res, next) => {
     console.error('未处理的错误:', err);
@@ -193,10 +259,87 @@ app.use((req, res) => {
     res.status(404).json({ success: false, error: '页面未找到' });
 });
 
+// 启动服务器函数
+async function startServer(retryCount = 0) {
+    const maxRetries = 5;
+
+    try {
+        // 使用端口管理器分配端口
+        PORT = await portManager.allocatePort('web');
+
+        if (!PORT) {
+            throw new Error('无法分配端口给Web服务器');
+        }
+
+        const server = app.listen(PORT, () => {
+            const localIP = getLocalIP();
+            console.log(`🌐 Web管理界面已启动: http://localhost:${PORT}`);
+            console.log(`🌐 局域网访问地址: http://${localIP}:${PORT}`);
+
+            // 将端口信息暴露给前端
+            app.locals.currentPort = PORT;
+        });
+
+        // 处理端口占用错误
+        server.on('error', async (error) => {
+            if (error.code === 'EADDRINUSE') {
+                if (retryCount >= maxRetries) {
+                    console.error(`❌ 已达到最大重试次数 (${maxRetries})，启动失败`);
+                    process.exit(1);
+                    return;
+                }
+
+                console.log(`⚠️ 端口 ${PORT} 被占用，尝试分配新端口... (重试 ${retryCount + 1}/${maxRetries})`);
+
+                // 释放当前端口分配
+                await portManager.releasePort('web');
+
+                // 清理持久化文件，强制重新分配
+                try {
+                    const fs = await import('fs/promises');
+                    await fs.unlink(portManager.persistenceFile);
+                    console.log('🧹 已清理端口持久化文件');
+                } catch (cleanupError) {
+                    // 忽略清理错误
+                }
+
+                // 延迟后重试
+                setTimeout(() => startServer(retryCount + 1), 2000);
+            } else {
+                throw error;
+            }
+        });
+
+        // 优雅关闭处理
+        const gracefulShutdown = async (signal) => {
+            console.log(`\n📡 收到 ${signal} 信号，正在关闭Web服务器...`);
+
+            server.close(async () => {
+                try {
+                    // 释放端口
+                    await portManager.releasePort('web');
+                    console.log('✅ Web服务器已关闭');
+                    process.exit(0);
+                } catch (error) {
+                    console.error('❌ 关闭时出错:', error.message);
+                    process.exit(1);
+                }
+            });
+        };
+
+        process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+        process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+
+        return server;
+
+    } catch (error) {
+        console.error('❌ Web服务器启动失败:', error.message);
+        process.exit(1);
+    }
+}
+
 // 启动服务器
-app.listen(PORT, () => {
-    console.log(`Web管理界面已启动: http://localhost:${PORT}`);
-});
+startServer();
 
 // 优雅关闭
 process.on('SIGINT', async () => {

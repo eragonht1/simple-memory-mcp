@@ -115,7 +115,7 @@ Simple Memory MCP 提供两套API：
 
 ### 基础URL
 ```
-http://localhost:5566/api
+http://localhost:8011/api
 ```
 
 ### 端点列表
@@ -287,13 +287,13 @@ CREATE TABLE memories (
 ### REST API调用示例
 ```bash
 # 获取所有记忆
-curl http://localhost:5566/api/memories
+curl http://localhost:8011/api/memories
 
 # 创建新记忆
-curl -X POST http://localhost:5566/api/memories \
+curl -X POST http://localhost:8011/api/memories \
   -H "Content-Type: application/json" \
   -d '{"title":"新记忆","content":"记忆内容"}'
 
 # 搜索记忆
-curl "http://localhost:5566/api/search?q=学习"
+curl "http://localhost:8011/api/search?q=学习"
 ```

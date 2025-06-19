@@ -328,7 +328,7 @@ describe('MCP Server', () => {
 import { test, expect } from '@playwright/test';
 
 test('should create and view memory', async ({ page }) => {
-  await page.goto('http://localhost:5566');
+  await page.goto('http://localhost:8011');
   
   // 点击添加记忆按钮
   await page.click('#addMemoryBtn');

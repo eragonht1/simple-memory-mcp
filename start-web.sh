@@ -22,9 +22,35 @@ if [ ! -d "node_modules" ]; then
     fi
 fi
 
+# 使用Node.js启动器（推荐方式）
+echo "使用专业的Node.js启动器..."
+if [ -f "start-web.js" ]; then
+    echo "检测到start-web.js，使用智能端口管理..."
+    node start-web.js
+    exit $?
+fi
+
+echo "未找到start-web.js，使用传统启动方式..."
+
+# 检查端口8011是否被占用
+echo "检查端口8011..."
+if lsof -Pi :8011 -sTCP:LISTEN -t >/dev/null 2>&1; then
+    echo "端口8011已被占用，正在清理..."
+    # 获取占用端口的进程ID并终止
+    PID=$(lsof -Pi :8011 -sTCP:LISTEN -t)
+    if [ ! -z "$PID" ]; then
+        echo "终止进程 $PID..."
+        kill -9 $PID 2>/dev/null
+        sleep 2
+        echo "端口已清理"
+    fi
+else
+    echo "端口8011可用"
+fi
+
 # 启动Web服务器
 echo "启动Web管理界面..."
-echo "服务器将在 http://localhost:5566 启动"
+echo "服务器将在 http://localhost:8011 启动"
 echo ""
 
 # Start web server in background
@@ -37,17 +63,17 @@ sleep 3
 # Open browser
 echo "正在打开浏览器..."
 if command -v xdg-open &> /dev/null; then
-    xdg-open http://localhost:5566
+    xdg-open http://localhost:8011
 elif command -v open &> /dev/null; then
-    open http://localhost:5566
+    open http://localhost:8011
 elif command -v start &> /dev/null; then
-    start http://localhost:5566
+    start http://localhost:8011
 else
-    echo "无法自动打开浏览器，请手动访问: http://localhost:5566"
+    echo "无法自动打开浏览器，请手动访问: http://localhost:8011"
 fi
 
 echo ""
-echo "Web界面正在运行: http://localhost:5566"
+echo "Web界面正在运行: http://localhost:8011"
 echo "按 Ctrl+C 停止服务器"
 
 # Wait for user to stop the server

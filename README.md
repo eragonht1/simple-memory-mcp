@@ -1,13 +1,21 @@
-# 🧠 Simple Memory MCP
+# 🧠 Simple Memory MCP v1.2.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://github.com/eragonht1/simple-memory-mcp)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/eragonht1/simple-memory-mcp/releases)
 
-A memory management system designed for AI assistants, implementing a complete Model Context Protocol (MCP) server to help AI assistants store, retrieve, and manage users' important information.
+A memory management system designed for AI assistants, implementing a complete Model Context Protocol (MCP) server with intelligent port management, drag-and-drop sorting, and LAN access support.
 ![sdg](https://github.com/user-attachments/assets/188a5179-4e9d-4975-9669-9be79a1059e4)
 
 ## ✨ Features
+
+### 🎉 New in v1.2.0
+- 🎯 **Fixed Drag & Drop Sorting**: Completely rebuilt drag-and-drop functionality with accurate position calculation
+- 🌐 **Intelligent Port Management**: Automatic port detection, conflict resolution, and persistent allocation
+- 🚀 **Professional Launcher**: Cross-platform Node.js launcher with colorful output and auto-cleanup
+- 🏠 **LAN Access Support**: Automatic local IP detection and easy sharing across network devices
+- 🔧 **Auto Process Cleanup**: Automatically detects and cleans up conflicting processes before startup
 
 ### 🎯 Core Functions
 - **🔒 Secure Storage**: AI assistants must first ask users to provide titles, then input content
@@ -55,6 +63,23 @@ npm run init-db
 ```
 
 4. **Start Services**
+
+**Option 1: Smart Port Management (Recommended)**
+```bash
+# Start Web Interface with intelligent port allocation
+node start-web.js
+# or
+npm run web:start
+```
+*Features: Automatic port detection, conflict resolution, persistent port allocation*
+
+**Option 2: Cross-platform Shell Scripts**
+```bash
+# Linux/macOS (with smart port management)
+./start-web.sh
+```
+
+**Option 3: Traditional Commands**
 ```bash
 # Start MCP Server
 npm start
@@ -64,7 +89,9 @@ npm run web
 ```
 
 5. **Access Web Interface**
-Open browser and visit: `http://localhost:5566`
+- The browser will open automatically to the allocated port
+- Port information is displayed in the bottom-right corner of the web interface
+- Default port preference: 8011, but will auto-allocate if occupied
 
 ## 🤖 AI Assistant Configuration
 
@@ -125,7 +152,7 @@ Open browser and visit: `http://localhost:5566`
    {
      "mcpServers": {
        "simple-memory": {
-         "command": "G:\\docker\\McpApi\\simple-memory-mcp\\start-mcp.bat",
+         "command": "G:\\docker\\McpApi\\simple-memory-mcp\\start-mcp.sh",
          "args": []
        }
      }
@@ -186,7 +213,7 @@ If you encounter issues with MCP configuration:
    - **Path not found**: Use absolute paths in configuration
    - **Permission denied**: Ensure AI tool has access to project directory
    - **Module not found**: Run `npm install` in project directory
-   - **Port conflicts**: Check if port 5566 is available for web interface
+   - **Port conflicts**: Check if port 8011 is available for web interface
 
 ### Verify Configuration
 
@@ -254,9 +281,8 @@ simple-memory-mcp/
 ├── 📁 scripts/              # Utility scripts
 │   ├── 🔨 init-database.js  # Database initialization
 │   └── 🚀 deploy.js         # Deployment script
-├── 📄 start-mcp.bat         # Windows MCP startup script
 ├── 📄 start-mcp.sh          # Unix MCP startup script
-├── 📄 start-web.bat         # Windows Web startup script
+├── 📄 start-web.js          # Professional Web launcher (Node.js)
 ├── 📄 start-web.sh          # Unix Web startup script
 ├── 📄 package.json          # Project configuration
 ├── 📄 README.md             # Project documentation
@@ -322,6 +348,34 @@ If you need help or have any questions:
 - 📧 Email: support@example.com
 - 💬 Discussions: [GitHub Discussions](https://github.com/eragonht1/simple-memory-mcp/discussions)
 - 🐛 Issues: [GitHub Issues](https://github.com/eragonht1/simple-memory-mcp/issues)
+
+---
+
+## 📋 工作登记
+
+### 2024-12-19 修复Web应用启动错误
+**时间**: 2024-12-19  
+**操作1**: 修复了src/web/app.js文件中缺少express导入语句的问题，并将默认端口从5566改为8011以避免权限错误。Web服务器成功启动在http://localhost:8011。  
+**操作2**: 应用户要求将端口修改为8011，Web服务器现已重新启动在http://localhost:8011。  
+**操作3**: 全面检查并统一修改项目中所有文件的端口配置，将5566和3000全部替换为8011，确保配置一致性。涉及文件包括：API.md、DEPLOYMENT.md、.env.example、DEVELOPMENT.md、USER_GUIDE.md、start-web.bat、start-web.sh、deploy.js等。
+
+### 项目目录结构
+```
+simple-memory-mcp/
+├── src/
+│   ├── database.js          # 数据库操作
+│   ├── server.js            # MCP服务器
+│   ├── tools.js             # MCP工具实现
+│   └── web/
+│       ├── app.js           # Web应用主文件
+│       └── views/           # 视图模板
+├── data/                    # 数据存储目录
+├── docs/                    # 文档目录
+├── scripts/                 # 脚本目录
+├── tests/                   # 测试目录
+├── package.json             # 项目配置
+└── README.md               # 项目说明
+```
 
 ---
 

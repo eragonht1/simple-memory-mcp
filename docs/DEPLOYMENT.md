@@ -83,8 +83,8 @@ npm run init-db
 #### 环境变量配置（可选）
 创建 `.env` 文件：
 ```bash
-# Web服务器端口（默认5566）
-PORT=5566
+# Web服务器端口（默认8011）
+PORT=8011
 
 # 数据库文件路径（默认data/memories.db）
 DB_PATH=./data/memories.db
@@ -102,11 +102,11 @@ LOG_LEVEL=info
 
 **Linux**:
 ```bash
-# 允许5566端口访问
-sudo ufw allow 5566
+# 允许8011端口访问
+sudo ufw allow 8011
 
 # 或允许特定IP访问
-sudo ufw allow from 192.168.1.0/24 to any port 5566
+sudo ufw allow from 192.168.1.0/24 to any port 8011
 ```
 
 ### 4. 启动服务
@@ -172,15 +172,15 @@ echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' | node src/ser
 #### 测试Web服务器
 ```bash
 # 测试Web API
-curl http://localhost:5566/api/memories
+curl http://localhost:8011/api/memories
 
 # 或在浏览器中访问
-# http://localhost:5566
+# http://localhost:8011
 ```
 
 #### 功能测试
 1. **Web界面测试**:
-   - 访问 `http://localhost:5566`
+   - 访问 `http://localhost:8011`
    - 创建新记忆
    - 搜索记忆
    - 编辑和删除记忆
@@ -201,7 +201,7 @@ server {
     server_name your-domain.com;
 
     location / {
-        proxy_pass http://localhost:5566;
+        proxy_pass http://localhost:8011;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -220,8 +220,8 @@ server {
     ServerName your-domain.com
     ProxyPreserveHost On
     ProxyRequests Off
-    ProxyPass / http://localhost:5566/
-    ProxyPassReverse / http://localhost:5566/
+    ProxyPass / http://localhost:8011/
+ProxyPassReverse / http://localhost:8011/
 </VirtualHost>
 ```
 
@@ -266,7 +266,7 @@ const logger = winston.createLogger({
 ```bash
 # 创建健康检查脚本
 #!/bin/bash
-curl -f http://localhost:5566/api/memories > /dev/null 2>&1
+curl -f http://localhost:8011/api/memories > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Web服务器异常，正在重启..."
     pm2 restart memory-web
@@ -280,8 +280,8 @@ fi
 #### 端口占用
 ```bash
 # 查看端口占用
-netstat -ano | findstr :5566  # Windows
-lsof -i :5566                 # Linux/macOS
+netstat -ano | findstr :8011  # Windows
+lsof -i :8011                 # Linux/macOS
 
 # 终止占用进程
 taskkill /PID <PID> /F        # Windows
@@ -469,7 +469,7 @@ Simple Memory MCP 可以与Augment等AI工具集成，提供记忆管理功能�
 3. **验证Web界面**
    ```bash
    npm run web
-   # 打开浏览器访问 http://localhost:5566
+   # 打开浏览器访问 http://localhost:8011
    # 检查是否能看到通过Augment存储的记忆
    ```
 
@@ -499,13 +499,13 @@ Simple Memory MCP 可以与Augment等AI工具集成，提供记忆管理功能�
   - 确保防病毒软件没有阻止访问
 
 **4. "Port already in use" / 端口被占用**
-- **原因**: 另一个服务正在使用端口5566
+- **原因**: 另一个服务正在使用端口8011
 - **解决方法**:
 
   **Windows系统**:
   ```bash
   # 1. 查找占用端口的进程
-  netstat -ano | findstr :5566
+  netstat -ano | findstr :8011
 
   # 2. 记录PID（进程ID），然后终止进程
   taskkill /PID <PID> /F
@@ -523,7 +523,7 @@ Simple Memory MCP 可以与Augment等AI工具集成，提供记忆管理功能�
   **Linux/macOS系统**:
   ```bash
   # 1. 查找占用端口的进程
-  lsof -i :5566
+  lsof -i :8011
 
   # 2. 终止进程
   kill -9 <PID>

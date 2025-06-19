@@ -18,7 +18,7 @@ class Deployer {
     constructor() {
         this.config = {
             nodeVersion: '16.0.0',
-            port: process.env.PORT || 5566,
+            port: process.env.PORT || 8011,
             mcpPort: process.env.MCP_PORT || null,
             environment: process.env.NODE_ENV || 'production'
         };

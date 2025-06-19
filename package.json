@@ -1,6 +1,6 @@
 {
   "name": "simple-memory-mcp",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "A Model Context Protocol (MCP) server for managing user memories with web interface",
   "main": "src/server.js",
   "type": "module",
@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "web": "node src/web/app.js",
+    "web:start": "node start-web.js",
     "dev:web": "nodemon src/web/app.js",
     "test": "jest",
     "test:coverage": "jest --coverage",

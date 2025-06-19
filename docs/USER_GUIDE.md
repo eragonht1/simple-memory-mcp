@@ -67,19 +67,28 @@ AI: [返回完整的学习笔记内容]
 
 #### 访问Web界面
 
-**方式一：使用快速启动脚本（推荐）**
-- Windows用户：双击 `start-web.bat` 文件
+**方式一：专业启动器（推荐）**
+```bash
+# 使用Node.js专业启动器
+node start-web.js
+
+# 或使用npm脚本
+npm run web:start
+```
+
+**方式二：跨平台脚本**
 - Linux/macOS用户：运行 `./start-web.sh` 脚本
 
-**方式二：手动启动**
+**方式三：手动启动**
 1. 启动Web服务器：`npm run web`
-2. 打开浏览器访问：`http://localhost:5566`
+2. 打开浏览器访问：`http://localhost:8011`
 
-快速启动脚本会自动：
-- 检查Node.js环境
-- 安装必要的依赖包
+专业启动器会自动：
+- 检查Node.js版本和环境
+- 自动检测并清理端口占用
 - 启动Web管理界面
 - 在浏览器中打开管理页面
+- 提供彩色输出和状态提示
 
 ### 3. 通过AI助手使用（如Augment）
 
