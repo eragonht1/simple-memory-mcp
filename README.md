@@ -5,6 +5,7 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://github.com/eragonht1/simple-memory-mcp)
 
 A memory management system designed for AI assistants, implementing a complete Model Context Protocol (MCP) server to help AI assistants store, retrieve, and manage users' important information.
+![sdg](https://github.com/user-attachments/assets/188a5179-4e9d-4975-9669-9be79a1059e4)
 
 ## ✨ Features
 
