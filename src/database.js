@@ -44,15 +44,67 @@ class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL UNIQUE,
                 content TEXT NOT NULL,
+                sort_order INTEGER DEFAULT 0,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `;
 
         return new Promise((resolve, reject) => {
-            this.db.run(createMemoriesTable, (err) => {
+            this.db.run(createMemoriesTable, async (err) => {
                 if (err) {
                     reject(err);
+                } else {
+                    try {
+                        // 检查是否需要添加sort_order字段（用于现有数据库的迁移）
+                        await this.addSortOrderColumn();
+                        resolve();
+                    } catch (migrationError) {
+                        reject(migrationError);
+                    }
+                }
+            });
+        });
+    }
+
+    /**
+     * 添加排序字段（数据库迁移）
+     */
+    async addSortOrderColumn() {
+        return new Promise((resolve, reject) => {
+            // 检查sort_order字段是否存在
+            this.db.all("PRAGMA table_info(memories)", [], (err, columns) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const hasSortOrder = columns.some(col => col.name === 'sort_order');
+
+                if (!hasSortOrder) {
+                    // 添加sort_order字段
+                    this.db.run("ALTER TABLE memories ADD COLUMN sort_order INTEGER DEFAULT 0", (alterErr) => {
+                        if (alterErr) {
+                            reject(alterErr);
+                        } else {
+                            // 为现有记忆设置排序值（按创建时间）
+                            this.db.run(`
+                                UPDATE memories
+                                SET sort_order = (
+                                    SELECT COUNT(*)
+                                    FROM memories m2
+                                    WHERE m2.created_at <= memories.created_at
+                                ) - 1
+                            `, (updateErr) => {
+                                if (updateErr) {
+                                    reject(updateErr);
+                                } else {
+                                    console.log('已为现有记忆添加排序字段');
+                                    resolve();
+                                }
+                            });
+                        }
+                    });
                 } else {
                     resolve();
                 }
@@ -67,22 +119,33 @@ class Database {
      * @returns {Promise<number>} 新记忆的ID
      */
     async storeMemory(title, content) {
-        const sql = `
-            INSERT INTO memories (title, content, created_at, updated_at)
-            VALUES (?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        `;
+        // 获取当前最大排序值
+        const maxSortOrderSql = `SELECT COALESCE(MAX(sort_order), -1) as max_order FROM memories`;
 
         return new Promise((resolve, reject) => {
-            this.db.run(sql, [title, content], function(err) {
+            this.db.get(maxSortOrderSql, [], (err, row) => {
                 if (err) {
-                    if (err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-                        reject(new Error(`标题 "${title}" 已存在，请使用不同的标题`));
-                    } else {
-                        reject(err);
-                    }
-                } else {
-                    resolve(this.lastID);
+                    reject(err);
+                    return;
                 }
+
+                const nextSortOrder = (row.max_order || -1) + 1;
+                const sql = `
+                    INSERT INTO memories (title, content, sort_order, created_at, updated_at)
+                    VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                `;
+
+                this.db.run(sql, [title, content, nextSortOrder], function(insertErr) {
+                    if (insertErr) {
+                        if (insertErr.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+                            reject(new Error(`标题 "${title}" 已存在，请使用不同的标题`));
+                        } else {
+                            reject(insertErr);
+                        }
+                    } else {
+                        resolve(this.lastID);
+                    }
+                });
             });
         });
     }
@@ -93,10 +156,10 @@ class Database {
      */
     async getMemoryTitles() {
         const sql = `
-            SELECT id, title, created_at, 
+            SELECT id, title, created_at, sort_order,
                    SUBSTR(content, 1, 100) as preview
-            FROM memories 
-            ORDER BY created_at DESC
+            FROM memories
+            ORDER BY sort_order ASC, created_at DESC
         `;
 
         return new Promise((resolve, reject) => {
@@ -187,9 +250,9 @@ class Database {
      */
     async searchMemories(keyword) {
         const sql = `
-            SELECT * FROM memories 
+            SELECT * FROM memories
             WHERE title LIKE ? OR content LIKE ?
-            ORDER BY created_at DESC
+            ORDER BY sort_order ASC, created_at DESC
         `;
         const searchTerm = `%${keyword}%`;
 
@@ -199,6 +262,55 @@ class Database {
                     reject(err);
                 } else {
                     resolve(rows);
+                }
+            });
+        });
+    }
+
+    /**
+     * 批量更新记忆排序
+     * @param {Array} sortOrders - 排序数据数组 [{title, sortOrder}, ...]
+     * @returns {Promise<boolean>} 是否更新成功
+     */
+    async updateMemoriesOrder(sortOrders) {
+        const db = this.db; // 保存数据库引用
+
+        return new Promise((resolve, reject) => {
+            db.serialize(() => {
+                db.run("BEGIN TRANSACTION");
+
+                let completed = 0;
+                let hasError = false;
+
+                for (const { title, sortOrder } of sortOrders) {
+                    db.run(
+                        "UPDATE memories SET sort_order = ?, updated_at = CURRENT_TIMESTAMP WHERE title = ?",
+                        [sortOrder, title],
+                        function(err) {
+                            if (err && !hasError) {
+                                hasError = true;
+                                db.run("ROLLBACK");
+                                reject(err);
+                                return;
+                            }
+
+                            completed++;
+                            if (completed === sortOrders.length && !hasError) {
+                                db.run("COMMIT", (commitErr) => {
+                                    if (commitErr) {
+                                        reject(commitErr);
+                                    } else {
+                                        resolve(true);
+                                    }
+                                });
+                            }
+                        }
+                    );
+                }
+
+                if (sortOrders.length === 0) {
+                    db.run("COMMIT");
+                    resolve(true);
                 }
             });
         });

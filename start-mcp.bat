@@ -1,3 +1,3 @@
 @echo off
-cd /d "G:\docker\McpApi\simple-memory-mcp"
+cd /d "%~dp0"
 node src/server.js

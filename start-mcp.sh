@@ -1,3 +1,3 @@
 #!/bin/bash
-cd "G:/docker/McpApi/simple-memory-mcp"
+cd "$(dirname "$0")"
 node src/server.js

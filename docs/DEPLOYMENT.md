@@ -348,79 +348,227 @@ CREATE INDEX idx_memories_created_at ON memories(created_at);
 
 ### 配置Augment
 
-1. **找到Augment MCP配置**
-   - 打开Augment设置
-   - 导航到MCP配置部分
+Simple Memory MCP 可以与Augment等AI工具集成，提供记忆管理功能。
 
-2. **添加MCP服务器配置**
+#### 前提条件
 
-   **选项1：使用启动脚本（推荐）**
+1. **确保项目已正确安装**
+   ```bash
+   cd /path/to/simple-memory-mcp
+   npm install
+   npm run init-db
+   ```
+
+2. **验证Node.js环境**
+   ```bash
+   node --version  # 需要16.0.0或更高版本
+   npm --version
+   ```
+
+3. **测试MCP服务器**
+   ```bash
+   # 手动测试启动
+   node src/server.js
+   # 按Ctrl+C停止
+   ```
+
+#### 配置方法
+
+**方法1：使用启动脚本（推荐）**
+
+这种方法使用批处理文件确保正确的路径解析。
+
+1. 验证启动脚本存在：
+   ```bash
+   # Windows
+   dir start-mcp.bat
+
+   # Linux/macOS
+   ls start-mcp.sh
+   ```
+
+2. 在Augment中添加配置：
    ```json
    {
      "mcpServers": {
        "simple-memory": {
-         "command": "G:\\docker\\McpApi\\simple-memory-mcp\\start-mcp.bat",
+         "command": "/absolute/path/to/simple-memory-mcp/start-mcp.bat",
          "args": []
        }
      }
    }
    ```
 
-   **选项2：使用绝对路径**
-   ```json
-   {
-     "mcpServers": {
-       "simple-memory": {
-         "command": "node",
-         "args": ["G:\\docker\\McpApi\\simple-memory-mcp\\src\\server.js"],
-         "cwd": "G:\\docker\\McpApi\\simple-memory-mcp"
-       }
-     }
-   }
-   ```
+**方法2：使用绝对路径**
 
-   **选项3：使用npm脚本**
-   ```json
-   {
-     "mcpServers": {
-       "simple-memory": {
-         "command": "npm",
-         "args": ["start"],
-         "cwd": "G:\\docker\\McpApi\\simple-memory-mcp"
-       }
-     }
-   }
-   ```
+```json
+{
+  "mcpServers": {
+    "simple-memory": {
+      "command": "node",
+      "args": ["/absolute/path/to/simple-memory-mcp/src/server.js"],
+      "cwd": "/absolute/path/to/simple-memory-mcp"
+    }
+  }
+}
+```
+
+**方法3：使用npm脚本**
+
+```json
+{
+  "mcpServers": {
+    "simple-memory": {
+      "command": "npm",
+      "args": ["start"],
+      "cwd": "/absolute/path/to/simple-memory-mcp"
+    }
+  }
+}
+```
+
+#### 配置步骤
+
+1. **打开Augment设置**
+   - 启动Augment
+   - 导航到设置/首选项
+   - 找到MCP或Model Context Protocol部分
+
+2. **添加服务器配置**
+   - 复制上述配置方法之一
+   - 将路径替换为您的实际项目路径
+   - 保存配置
 
 3. **重启Augment**
+   - 完全关闭Augment
+   - 重新启动Augment
+   - 等待MCP服务器初始化
 
-### 故障排除
+#### 功能验证
 
-如果遇到MCP配置问题：
-
-1. **验证Node.js安装**
-   ```bash
-   node --version
-   npm --version
+1. **测试记忆存储**
+   ```
+   用户: 请帮我存储一个记忆
+   Augment: 请提供这个记忆的标题：
+   用户: 测试记忆
+   Augment: 请输入记忆的具体内容：
+   用户: 这是一个测试记忆，用于验证MCP集成。
+   Augment: 记忆 "测试记忆" 已成功存储！
    ```
 
-2. **检查项目路径**
-   ```bash
-   cd G:\docker\McpApi\simple-memory-mcp
-   dir src\server.js
+2. **测试记忆检索**
+   ```
+   用户: 请帮我查看存储的记忆
+   Augment: 您有以下记忆：
+           1. 测试记忆 (今天)
+           请选择要查看的记忆：
+   用户: 测试记忆
+   Augment: [返回完整内容]
    ```
 
-3. **手动测试启动**
+3. **验证Web界面**
    ```bash
-   cd G:\docker\McpApi\simple-memory-mcp
+   npm run web
+   # 打开浏览器访问 http://localhost:5566
+   # 检查是否能看到通过Augment存储的记忆
+   ```
+
+### MCP配置故障排除
+
+#### 常见错误及解决方案
+
+**1. "MCP error -1: Connection closed"**
+- **原因**: 路径或命令问题
+- **解决**: 使用方法1（启动脚本）获得最可靠的结果
+- **检查**: 确保所有路径正确且使用绝对路径
+- **验证**: 检查Node.js是否在系统PATH中
+
+**2. "Cannot find module"**
+- **原因**: 缺少依赖或工作目录错误
+- **解决**:
+  ```bash
+  cd /path/to/simple-memory-mcp
+  npm install
+  ```
+
+**3. "Permission denied"**
+- **原因**: Augment没有访问文件的权限
+- **解决**:
+  - 临时以管理员身份运行Augment（仅用于测试）
+  - 检查项目目录的文件权限
+  - 确保防病毒软件没有阻止访问
+
+**4. "Port already in use" / 端口被占用**
+- **原因**: 另一个服务正在使用端口5566
+- **解决方法**:
+
+  **Windows系统**:
+  ```bash
+  # 1. 查找占用端口的进程
+  netstat -ano | findstr :5566
+
+  # 2. 记录PID（进程ID），然后终止进程
+  taskkill /PID <PID> /F
+
+  # 3. 如果上述方法无效，使用PowerShell强制终止
+  powershell -Command "Stop-Process -Id <PID> -Force"
+
+  # 4. 批量终止所有Node.js进程（谨慎使用）
+  taskkill /F /IM node.exe
+
+  # 5. 验证端口已释放（无输出表示端口已释放）
+  netstat -ano | findstr :5566
+  ```
+
+  **Linux/macOS系统**:
+  ```bash
+  # 1. 查找占用端口的进程
+  lsof -i :5566
+
+  # 2. 终止进程
+  kill -9 <PID>
+
+  # 3. 如果需要强制终止所有Node.js进程
+  pkill -f node
+
+  # 4. 验证端口已释放
+  lsof -i :5566
+  ```
+
+  **通用解决步骤**:
+  1. 首先尝试正常关闭相关应用程序（如浏览器、其他Node.js应用）
+  2. 使用系统命令查找并终止占用端口的进程
+  3. 如果问题持续存在，考虑重启系统
+  4. 验证端口释放后重新启动Web服务器
+
+  **预防措施**:
+  - 使用`start-web.bat`脚本时，按任意键正常关闭服务器
+  - 避免直接关闭命令行窗口，这可能导致进程残留
+  - 定期检查并清理僵尸进程
+
+#### 调试步骤
+
+1. **手动启动测试**
+   ```bash
+   cd /path/to/simple-memory-mcp
    node src/server.js
    ```
 
-4. **常见问题**
-   - **路径未找到**: 在配置中使用绝对路径
-   - **权限被拒绝**: 确保AI工具有权限访问项目目录
-   - **模块未找到**: 在项目目录中运行 `npm install`
-   - **端口冲突**: 检查端口5566是否可用于Web界面
+2. **检查项目结构**
+   ```bash
+   ls src/server.js src/database.js src/tools.js
+   ```
+
+3. **测试简单输入**
+   启动后输入：
+   ```json
+   {"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}
+   ```
+
+4. **查看日志**
+   - 检查Augment日志中的MCP相关错误消息
+   - 查看控制台输出中的错误信息
+   - 检查Windows事件查看器（如适用）
 
 ## 维护指南
 

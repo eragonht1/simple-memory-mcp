@@ -150,15 +150,34 @@ app.get('/api/search', async (req, res) => {
     try {
         await initDatabase();
         const { q: keyword } = req.query;
-        
+
         if (!keyword) {
             return res.status(400).json({ success: false, error: '搜索关键词是必需的' });
         }
-        
+
         const memories = await database.searchMemories(keyword);
         res.json({ success: true, memories });
     } catch (error) {
         console.error('搜索记忆失败:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 更新记忆排序
+app.post('/api/memories/reorder', async (req, res) => {
+    try {
+        await initDatabase();
+        const { sortOrders } = req.body;
+
+        if (!sortOrders || !Array.isArray(sortOrders)) {
+            return res.status(400).json({ success: false, error: '排序数据格式错误' });
+        }
+
+        // 批量更新排序
+        await database.updateMemoriesOrder(sortOrders);
+        res.json({ success: true, message: '记忆排序已更新' });
+    } catch (error) {
+        console.error('更新记忆排序失败:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });

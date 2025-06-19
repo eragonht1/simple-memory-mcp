@@ -36,8 +36,8 @@ class Deployer {
             await this.initializeDatabase();
             await this.createConfigFiles();
             await this.runTests();
-            await this.createStartupScripts();
-            
+            await this.verifyStartupScripts();
+
             console.log('\n✅ 部署完成！');
             this.printStartupInstructions();
         } catch (error) {
@@ -145,85 +145,28 @@ LOG_FILE=./logs/app.log
     }
 
     /**
-     * 创建启动脚本
+     * 验证启动脚本
      */
-    async createStartupScripts() {
-        console.log('\n📝 创建启动脚本...');
+    async verifyStartupScripts() {
+        console.log('\n📝 验证启动脚本...');
 
-        // Windows启动脚本
-        const windowsScript = `@echo off
-echo Starting Simple Memory MCP...
+        const scripts = [
+            'start-mcp.bat',
+            'start-mcp.sh',
+            'start-web.bat',
+            'start-web.sh'
+        ];
 
-echo Starting MCP Server...
-start "MCP Server" cmd /k "npm start"
+        for (const script of scripts) {
+            const scriptPath = path.join(projectRoot, script);
+            if (await fs.pathExists(scriptPath)) {
+                console.log(`✓ ${script} 存在`);
+            } else {
+                console.warn(`⚠️  ${script} 不存在`);
+            }
+        }
 
-timeout /t 3 /nobreak > nul
-
-echo Starting Web Server...
-start "Web Server" cmd /k "npm run web"
-
-echo Both servers are starting...
-echo MCP Server: Running in background
-echo Web Interface: http://localhost:${this.config.port}
-pause
-`;
-
-        await fs.writeFile(path.join(projectRoot, 'start.bat'), windowsScript);
-        console.log('✓ Windows启动脚本已创建 (start.bat)');
-
-        // Linux/macOS启动脚本
-        const unixScript = `#!/bin/bash
-echo "Starting Simple Memory MCP..."
-
-echo "Starting MCP Server..."
-npm start &
-MCP_PID=$!
-
-sleep 3
-
-echo "Starting Web Server..."
-npm run web &
-WEB_PID=$!
-
-echo "Both servers are running:"
-echo "MCP Server PID: $MCP_PID"
-echo "Web Server PID: $WEB_PID"
-echo "Web Interface: http://localhost:${this.config.port}"
-
-# 创建PID文件用于停止服务
-echo $MCP_PID > mcp.pid
-echo $WEB_PID > web.pid
-
-echo "To stop servers, run: ./stop.sh"
-wait
-`;
-
-        await fs.writeFile(path.join(projectRoot, 'start.sh'), unixScript);
-        await fs.chmod(path.join(projectRoot, 'start.sh'), '755');
-        console.log('✓ Unix启动脚本已创建 (start.sh)');
-
-        // 停止脚本
-        const stopScript = `#!/bin/bash
-echo "Stopping Simple Memory MCP..."
-
-if [ -f mcp.pid ]; then
-    MCP_PID=$(cat mcp.pid)
-    kill $MCP_PID 2>/dev/null && echo "MCP Server stopped (PID: $MCP_PID)"
-    rm mcp.pid
-fi
-
-if [ -f web.pid ]; then
-    WEB_PID=$(cat web.pid)
-    kill $WEB_PID 2>/dev/null && echo "Web Server stopped (PID: $WEB_PID)"
-    rm web.pid
-fi
-
-echo "All servers stopped."
-`;
-
-        await fs.writeFile(path.join(projectRoot, 'stop.sh'), stopScript);
-        await fs.chmod(path.join(projectRoot, 'stop.sh'), '755');
-        console.log('✓ 停止脚本已创建 (stop.sh)');
+        console.log('✓ 启动脚本验证完成');
     }
 
     /**
@@ -236,13 +179,12 @@ echo "All servers stopped."
 📋 启动说明:
 
 Windows用户:
-  双击运行: start.bat
-  或命令行: npm start (MCP服务器) 和 npm run web (Web界面)
+  MCP服务器: 双击 start-mcp.bat 或运行 npm start
+  Web界面: 双击 start-web.bat 或运行 npm run web
 
 Linux/macOS用户:
-  运行: ./start.sh
-  停止: ./stop.sh
-  或命令行: npm start (MCP服务器) 和 npm run web (Web界面)
+  MCP服务器: 运行 ./start-mcp.sh 或 npm start
+  Web界面: 运行 ./start-web.sh 或 npm run web
 
 🌐 访问地址:
   Web管理界面: http://localhost:${this.config.port}

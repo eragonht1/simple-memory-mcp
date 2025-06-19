@@ -274,9 +274,8 @@ simple-memory-mcp/
 
 - [📖 User Guide](docs/USER_GUIDE.md) - Detailed usage instructions
 - [📚 API Documentation](docs/API.md) - MCP tools and REST API docs
-- [🚀 Deployment Guide](docs/DEPLOYMENT.md) - Production deployment guide
+- [🚀 Deployment Guide](docs/DEPLOYMENT.md) - Production deployment and AI tool configuration
 - [🔧 Development Docs](docs/DEVELOPMENT.md) - Developer guide and architecture
-- [🤖 Augment Configuration](docs/AUGMENT_CONFIG.md) - Detailed Augment setup guide
 - [🛡️ Data Privacy Protection](DATA_PRIVACY.md) - Privacy protection measures and security guidelines
 
 ## 🧪 Testing
