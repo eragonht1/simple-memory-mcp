@@ -115,7 +115,15 @@ class MCPServer {
                 case 'delete_memory':
                     result = await this.toolExecutor.executeDeleteMemory(args);
                     break;
-                
+
+                case 'open_memory_web':
+                    result = await this.toolExecutor.executeOpenMemoryWeb(args);
+                    break;
+
+                case 'stop_memory_web':
+                    result = await this.toolExecutor.executeStopMemoryWeb(args);
+                    break;
+
                 default:
                     return this.createErrorResponse(id, -32601, `未知工具: ${name}`);
             }
@@ -127,7 +135,7 @@ class MCPServer {
                     content: [
                         {
                             type: "text",
-                            text: JSON.stringify(result, null, 2)
+                            text: this.formatJsonResponse(result)
                         }
                     ]
                 }
@@ -136,6 +144,16 @@ class MCPServer {
             console.error(`执行工具 ${name} 时出错:`, error);
             return this.createErrorResponse(id, -32603, `工具执行失败: ${error.message}`);
         }
+    }
+
+    /**
+     * 格式化JSON响应，避免中文字符被转义
+     */
+    formatJsonResponse(obj) {
+        // 使用自定义的JSON序列化，保持中文字符不被转义
+        return JSON.stringify(obj, (key, value) => {
+            return value;
+        }, 2);
     }
 
     /**

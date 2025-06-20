@@ -140,6 +140,19 @@ User: [Enter content]
 AI: Memory "Study Notes - MCP Protocol" has been successfully stored!
 ```
 
+#### **NEW! Web Interface Auto-Launch**
+Simply say any of these trigger phrases to your AI assistant:
+- **"打开记忆MCP"** (Open Memory MCP)
+- **"打开记忆"** (Open Memory)
+- **"打开记忆WEB"** (Open Memory WEB)
+- **"开启记忆"** (Start Memory)
+
+The AI will automatically:
+1. 🚀 Start the web server (if not running)
+2. 🌐 Open your default browser
+3. 📋 Display the memory management interface
+4. ✨ Provide usage tips and access URLs
+
 #### Through Web Interface
 1. Click "➕ Add Memory" to create new memories
 2. Click memory cards to view details
@@ -152,6 +165,7 @@ AI: Memory "Study Notes - MCP Protocol" has been successfully stored!
 - `list_memory_titles` - Get list of all memory titles
 - `get_memory_by_title` - Retrieve memory content by title
 - `delete_memory` - Delete specified memory
+- `open_memory_web` - **NEW!** Open memory management web interface with auto browser launch
 
 ### Documentation
 
@@ -179,6 +193,25 @@ kill -9 <PID>
 ```bash
 rm data/memories.db
 npm run init-db
+```
+
+**Web interface auto-launch issues:**
+```bash
+# If browser doesn't open automatically
+# Check if the web server is running
+curl http://localhost:8011
+
+# Manually open the URL shown in AI response
+# Example: http://localhost:8011
+
+# Check browser availability (Linux)
+which xdg-open firefox google-chrome
+
+# Check browser availability (Windows)
+where start
+
+# Check browser availability (macOS)
+which open
 ```
 
 ---
@@ -319,6 +352,19 @@ AI: 请输入记忆的具体内容：
 AI: 记忆 "学习笔记 - MCP协议" 已成功存储！
 ```
 
+#### **新功能！Web界面自动启动**
+只需对AI助手说出以下任一触发词：
+- **"打开记忆MCP"**
+- **"打开记忆"**
+- **"打开记忆WEB"**
+- **"开启记忆"**
+
+AI将自动：
+1. 🚀 启动Web服务器（如果未运行）
+2. 🌐 打开默认浏览器
+3. 📋 显示记忆管理界面
+4. ✨ 提供使用提示和访问地址
+
 #### 通过Web界面使用
 1. 点击"➕ 添加记忆"创建新记忆
 2. 点击记忆卡片查看详情
@@ -331,6 +377,7 @@ AI: 记忆 "学习笔记 - MCP协议" 已成功存储！
 - `list_memory_titles` - 获取所有记忆标题列表
 - `get_memory_by_title` - 根据标题检索记忆内容
 - `delete_memory` - 删除指定记忆
+- `open_memory_web` - **新功能！** 打开记忆管理Web界面并自动启动浏览器
 
 ### 文档
 
@@ -358,6 +405,25 @@ kill -9 <PID>
 ```bash
 rm data/memories.db
 npm run init-db
+```
+
+**Web界面自动启动问题:**
+```bash
+# 如果浏览器没有自动打开
+# 检查Web服务器是否运行
+curl http://localhost:8011
+
+# 手动打开AI响应中显示的URL
+# 例如: http://localhost:8011
+
+# 检查浏览器可用性 (Linux)
+which xdg-open firefox google-chrome
+
+# 检查浏览器可用性 (Windows)
+where start
+
+# 检查浏览器可用性 (macOS)
+which open
 ```
 
 ---

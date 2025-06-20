@@ -1,4 +1,6 @@
 import database from './database.js';
+import { webServerManager } from './services/WebServerManager.js';
+import { browserLauncher } from './services/BrowserLauncher.js';
 
 /**
  * MCP工具定义
@@ -75,6 +77,50 @@ export const deleteMemoryTool = {
             }
         },
         required: ["title"]
+    }
+};
+
+/**
+ * 打开记忆Web管理界面工具
+ * 支持多种触发词：打开记忆MCP、打开记忆、打开记忆WEB、开启记忆
+ */
+export const openMemoryWebTool = {
+    name: "open_memory_web",
+    description: "打开记忆管理Web界面。当用户说出以下任一触发词时自动调用：'打开记忆MCP'、'打开记忆'、'打开记忆WEB'、'开启记忆'。会自动启动Web服务器并在浏览器中打开管理界面。",
+    inputSchema: {
+        type: "object",
+        properties: {
+            trigger_phrase: {
+                type: "string",
+                description: "触发此工具的用户输入短语",
+                enum: ["打开记忆MCP", "打开记忆", "打开记忆WEB", "开启记忆"]
+            },
+            auto_open_browser: {
+                type: "boolean",
+                description: "是否自动打开浏览器（默认为true）",
+                default: true
+            }
+        },
+        required: []
+    }
+};
+
+/**
+ * 停止记忆Web管理界面工具
+ */
+export const stopMemoryWebTool = {
+    name: "stop_memory_web",
+    description: "停止记忆管理Web界面服务器。用于强制停止所有相关进程和释放端口。",
+    inputSchema: {
+        type: "object",
+        properties: {
+            force: {
+                type: "boolean",
+                description: "是否强制停止（包括清理端口进程）",
+                default: true
+            }
+        },
+        required: []
     }
 };
 
@@ -194,13 +240,13 @@ export class ToolExecutor {
     async executeDeleteMemory(args) {
         try {
             const { title } = args;
-            
+
             if (!title) {
                 throw new Error("标题是必需的");
             }
 
             const deleted = await this.database.deleteMemory(title);
-            
+
             if (!deleted) {
                 return {
                     success: false,
@@ -221,6 +267,136 @@ export class ToolExecutor {
     }
 
     /**
+     * 执行打开记忆Web管理界面工具
+     */
+    async executeOpenMemoryWeb(args = {}) {
+        try {
+            const {
+                trigger_phrase = "打开记忆",
+                auto_open_browser = true
+            } = args;
+
+            console.log(`🎯 触发词: "${trigger_phrase}"`);
+            console.log('🚀 正在启动记忆管理Web界面...');
+
+            // 启动Web服务器
+            const serverResult = await webServerManager.startWebServer();
+
+            if (!serverResult.success) {
+                return {
+                    success: false,
+                    error: `Web服务器启动失败: ${serverResult.error}`,
+                    trigger_phrase: trigger_phrase
+                };
+            }
+
+            const webUrl = webServerManager.getWebUrl();
+            const result = {
+                success: true,
+                message: '记忆管理Web界面已启动',
+                trigger_phrase: trigger_phrase,
+                server_info: {
+                    port: serverResult.port,
+                    pid: serverResult.pid,
+                    local_url: webUrl.local,
+                    lan_url: webUrl.lan
+                }
+            };
+
+            // 自动打开浏览器
+            if (auto_open_browser) {
+                console.log('🌐 正在打开浏览器...');
+
+                const browserResult = await browserLauncher.openBrowser(webUrl.local, {
+                    timeout: 8000,
+                    fallback: true
+                });
+
+                result.browser_info = {
+                    opened: browserResult.success,
+                    platform: browserResult.platform,
+                    command: browserResult.command,
+                    error: browserResult.error
+                };
+
+                if (browserResult.success) {
+                    result.message += '，浏览器已自动打开';
+                    console.log('✅ 浏览器启动成功');
+                } else {
+                    result.message += `，请手动访问: ${webUrl.local}`;
+                    console.log(`⚠️ 浏览器启动失败: ${browserResult.error}`);
+                    console.log(`💡 请手动访问: ${webUrl.local}`);
+                }
+            } else {
+                result.message += `，请访问: ${webUrl.local}`;
+            }
+
+            // 添加使用提示
+            result.usage_tips = [
+                "Web界面功能:",
+                "• 创建和编辑记忆",
+                "• 搜索记忆内容",
+                "• 管理记忆列表",
+                "• 删除不需要的记忆",
+                "",
+                "访问地址:",
+                `• 本地访问: ${webUrl.local}`,
+                `• 局域网访问: ${webUrl.lan}`
+            ];
+
+            return result;
+
+        } catch (error) {
+            console.error('❌ 打开记忆Web界面失败:', error);
+            return {
+                success: false,
+                error: error.message,
+                trigger_phrase: args.trigger_phrase || "未知"
+            };
+        }
+    }
+
+    /**
+     * 执行停止记忆Web管理界面工具
+     */
+    async executeStopMemoryWeb(args = {}) {
+        try {
+            const { force = true } = args;
+
+            console.log('🛑 正在停止记忆管理Web界面...');
+
+            let result;
+            if (force) {
+                result = await webServerManager.forceStopWebServer();
+            } else {
+                result = await webServerManager.stopWebServer();
+            }
+
+            if (result.success) {
+                console.log('✅ 记忆管理Web界面已停止');
+                return {
+                    success: true,
+                    message: '记忆管理Web界面已停止',
+                    force_used: force
+                };
+            } else {
+                return {
+                    success: false,
+                    error: `停止Web服务器失败: ${result.error}`,
+                    force_used: force
+                };
+            }
+
+        } catch (error) {
+            console.error('❌ 停止记忆Web界面失败:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+
+    /**
      * 关闭数据库连接
      */
     async close() {
@@ -233,5 +409,7 @@ export const tools = [
     storeMemoryTool,
     listMemoryTitlesTool,
     getMemoryByTitleTool,
-    deleteMemoryTool
+    deleteMemoryTool,
+    openMemoryWebTool,
+    stopMemoryWebTool
 ];
