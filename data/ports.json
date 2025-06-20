@@ -1,0 +1,51 @@
+{
+  "timestamp": "2025-06-19T18:52:40.346Z",
+  "ttl": 86400000,
+  "ports": {
+    "web": {
+      "port": 8011,
+      "service": "web",
+      "allocatedAt": "2025-06-19T18:52:40.346Z",
+      "config": {
+        "name": "Web管理界面",
+        "preferred": 8011,
+        "range": [
+          8010,
+          8020
+        ],
+        "fallback": [
+          3000,
+          3010
+        ],
+        "protocol": "http",
+        "autoOpen": true,
+        "environment": "development",
+        "global": {
+          "scanRange": {
+            "start": 8000,
+            "end": 9000
+          },
+          "retryCount": 10,
+          "retryDelay": 100,
+          "timeout": 3000,
+          "persistence": {
+            "enabled": true,
+            "file": "data/ports.json",
+            "ttl": 86400000
+          },
+          "strategy": {
+            "priority": [
+              "last_used",
+              "preferred",
+              "range",
+              "fallback",
+              "scan"
+            ],
+            "avoidKilling": true,
+            "onConflict": "find_alternative"
+          }
+        }
+      }
+    }
+  }
+}

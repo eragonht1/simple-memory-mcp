@@ -366,8 +366,5 @@ npm run init-db
 
 MIT License
 
----
-
----
 **Simple Memory MCP** - 让AI助手拥有持久记忆的能力 🧠✨
 **Simple Memory MCP** - Giving AI assistants persistent memory capabilities 🧠✨
