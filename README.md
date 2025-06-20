@@ -9,7 +9,7 @@
 ### Overview
 
 Simple Memory MCP is a memory management system designed for AI assistants, implementing the Model Context Protocol (MCP) to provide persistent memory storage and retrieval capabilities.
-
+![image](./image/A1.png)
 ### Features
 
 - **🧠 Smart Memory Storage**: AI assistants must first ask users for memory titles, then request content
@@ -188,7 +188,7 @@ npm run init-db
 ### 概述
 
 Simple Memory MCP 是一个专为AI助手设计的记忆管理系统，实现了模型上下文协议（MCP），为AI助手提供持久化记忆存储和检索功能。
-
+![image](./image/A1.png)
 ### 功能特性
 
 - **🧠 智能记忆存储**: AI助手必须先要求用户提供记忆标题，再要求输入内容
