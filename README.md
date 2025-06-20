@@ -20,10 +20,61 @@ Simple Memory MCP is a memory management system designed for AI assistants, impl
 
 ### Quick Start
 
+#### Clone Repository
+
+```bash
+# Clone the repository
+git clone https://github.com/eragonht1/simple-memory-mcp.git
+
+# Navigate to project directory
+cd simple-memory-mcp
+```
+
 #### Prerequisites
 - Node.js 16.0.0 or higher
 - 512MB RAM minimum
 - 100MB available storage
+
+#### Node.js Installation Guide
+
+**For Windows Users:**
+1. Visit [Node.js official website](https://nodejs.org/)
+2. Download the LTS (Long Term Support) version
+3. Run the installer (.msi file)
+4. Follow the installation wizard with default settings
+5. Restart your computer after installation
+
+**For macOS Users:**
+```bash
+# Option 1: Download from official website
+# Visit https://nodejs.org/ and download the LTS version
+
+# Option 2: Using Homebrew (recommended)
+brew install node
+```
+
+**For Linux Users:**
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install nodejs npm
+
+# CentOS/RHEL/Fedora
+sudo dnf install nodejs npm
+
+# Arch Linux
+sudo pacman -S nodejs npm
+```
+
+**Verify Installation:**
+```bash
+# Check Node.js version
+node --version
+
+# Check npm version
+npm --version
+```
+Both commands should return version numbers (e.g., v18.17.0 for Node.js).
 
 #### Installation
 
@@ -54,31 +105,28 @@ npm run web
 
 ### AI Assistant Configuration
 
-#### For Augment
+#### Universal Configuration Template
+
+Use the following configuration template for any AI assistant that supports MCP:
+
 ```json
 {
   "mcpServers": {
     "simple-memory": {
       "command": "node",
-      "args": ["/absolute/path/to/simple-memory-mcp/src/server.js"],
-      "cwd": "/absolute/path/to/simple-memory-mcp"
+      "args": ["./start-mcp.js"],
+      "cwd": "/path/to/your/simple-memory-mcp"
     }
   }
 }
 ```
 
-#### For Claude Desktop
-```json
-{
-  "mcpServers": {
-    "simple-memory": {
-      "command": "node",
-      "args": ["src/server.js"],
-      "cwd": "/path/to/simple-memory-mcp"
-    }
-  }
-}
-```
+**Configuration Steps:**
+1. Replace `/path/to/your/simple-memory-mcp` with your actual project path
+2. Add this configuration to your AI assistant's MCP settings file
+3. Restart your AI assistant to load the new configuration
+
+**Note:** The `start-mcp.js` script provides better error handling and user-friendly output compared to directly calling `src/server.js`.
 
 ### Usage Examples
 
@@ -151,10 +199,61 @@ Simple Memory MCP 是一个专为AI助手设计的记忆管理系统，实现了
 
 ### 快速开始
 
+#### 克隆仓库
+
+```bash
+# 克隆仓库
+git clone https://github.com/eragonht1/simple-memory-mcp.git
+
+# 进入项目目录
+cd simple-memory-mcp
+```
+
 #### 系统要求
 - Node.js 16.0.0 或更高版本
 - 最低512MB内存
 - 100MB可用存储空间
+
+#### Node.js安装指南
+
+**Windows用户：**
+1. 访问 [Node.js官方网站](https://nodejs.org/)
+2. 下载LTS（长期支持）版本
+3. 运行安装程序（.msi文件）
+4. 按照安装向导的默认设置进行安装
+5. 安装完成后重启计算机
+
+**macOS用户：**
+```bash
+# 方法1：从官网下载
+# 访问 https://nodejs.org/ 下载LTS版本
+
+# 方法2：使用Homebrew（推荐）
+brew install node
+```
+
+**Linux用户：**
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install nodejs npm
+
+# CentOS/RHEL/Fedora
+sudo dnf install nodejs npm
+
+# Arch Linux
+sudo pacman -S nodejs npm
+```
+
+**验证安装：**
+```bash
+# 检查Node.js版本
+node --version
+
+# 检查npm版本
+npm --version
+```
+两个命令都应该返回版本号（例如：Node.js显示v18.17.0）。
 
 #### 安装步骤
 
@@ -185,31 +284,28 @@ npm run web
 
 ### AI助手配置
 
-#### Augment配置
+#### 通用配置模板
+
+以下配置模板适用于任何支持MCP的AI助手：
+
 ```json
 {
   "mcpServers": {
     "simple-memory": {
       "command": "node",
-      "args": ["/absolute/path/to/simple-memory-mcp/src/server.js"],
-      "cwd": "/absolute/path/to/simple-memory-mcp"
+      "args": ["./start-mcp.js"],
+      "cwd": "/path/to/your/simple-memory-mcp"
     }
   }
 }
 ```
 
-#### Claude Desktop配置
-```json
-{
-  "mcpServers": {
-    "simple-memory": {
-      "command": "node",
-      "args": ["src/server.js"],
-      "cwd": "/path/to/simple-memory-mcp"
-    }
-  }
-}
-```
+**配置步骤：**
+1. 将 `/path/to/your/simple-memory-mcp` 替换为你的实际项目路径
+2. 将此配置添加到你的AI助手的MCP设置文件中
+3. 重启你的AI助手以加载新配置
+
+**注意：** `start-mcp.js` 脚本相比直接调用 `src/server.js` 提供了更好的错误处理和用户友好的输出信息。
 
 ### 使用示例
 
@@ -272,5 +368,6 @@ MIT License
 
 ---
 
+---
 **Simple Memory MCP** - 让AI助手拥有持久记忆的能力 🧠✨
 **Simple Memory MCP** - Giving AI assistants persistent memory capabilities 🧠✨
