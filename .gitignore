@@ -159,3 +159,6 @@ coverage/
 # Build artifacts
 build/
 dist/
+
+# User files (ignore without permission)
+用户文件(未经同意请忽略)/
