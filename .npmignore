@@ -1,0 +1,46 @@
+# 开发文件
+tests/
+*.test.js
+.gitignore
+.vscode/
+.idea/
+.DS_Store
+
+# 数据文件
+data/
+用户文件(未经同意请忽略)/
+
+# 构建和缓存
+node_modules/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# GitHub相关
+.github/
+.git/
+
+# 文档源文件（保留README.md和LICENSE）
+DOCS.md
+CHANGELOG.md
+
+# 临时文件
+*.tmp
+*.temp
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 编辑器文件
+*.swp
+*.swo
+*~
+
+# 系统文件
+Thumbs.db
+ehthumbs.db
+Desktop.ini

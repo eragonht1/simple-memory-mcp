@@ -1,5 +1,12 @@
 # ![Simple Memory MCP](./src/web/favicon/16.png) Simple Memory MCP
 
+[![npm version](https://badge.fury.io/js/simple-memory-mcp.svg)](https://badge.fury.io/js/simple-memory-mcp)
+[![npm downloads](https://img.shields.io/npm/dm/simple-memory-mcp.svg)](https://www.npmjs.com/package/simple-memory-mcp)
+[![GitHub issues](https://img.shields.io/github/issues/eragonht1/simple-memory-mcp.svg)](https://github.com/eragonht1/simple-memory-mcp/issues)
+[![GitHub license](https://img.shields.io/github/license/eragonht1/simple-memory-mcp.svg)](https://github.com/eragonht1/simple-memory-mcp/blob/main/LICENSE)
+[![Node.js version](https://img.shields.io/node/v/simple-memory-mcp.svg)](https://nodejs.org/)
+[![CI](https://github.com/eragonht1/simple-memory-mcp/workflows/CI/badge.svg)](https://github.com/eragonht1/simple-memory-mcp/actions)
+
 [English](#english) | [中文](#中文)
 
 ---

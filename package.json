@@ -15,7 +15,11 @@
     "test:watch": "jest --watch",
     "init-db": "node scripts/init-database.js",
     "deploy": "node scripts/deploy.js",
-    "build": "npm run init-db"
+    "build": "npm run init-db",
+    "prepublishOnly": "npm test && npm run build",
+    "prepack": "npm run init-db",
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix"
   },
   "keywords": [
     "mcp",
@@ -25,8 +29,19 @@
     "sqlite",
     "web-interface"
   ],
-  "author": "Your Name",
+  "author": {
+    "name": "eragonht1",
+    "url": "https://github.com/eragonht1"
+  },
   "license": "MIT",
+  "files": [
+    "src/",
+    "scripts/",
+    "start-mcp.js",
+    "start-web.js",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -58,6 +73,16 @@
     "testEnvironment": "node",
     "testMatch": [
       "**/tests/**/*.test.js"
-    ]
+    ],
+    "extensionsToTreatAsEsm": [".js"],
+    "globals": {
+      "jest": {
+        "useESM": true
+      }
+    },
+    "transform": {},
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    }
   }
 }
