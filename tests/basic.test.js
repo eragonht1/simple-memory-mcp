@@ -19,10 +19,8 @@ describe('Simple Memory MCP 项目结构测试', () => {
     test('应该存在文档文件', () => {
         expect(fs.existsSync('README.md')).toBe(true);
         expect(fs.existsSync('LICENSE')).toBe(true);
-        expect(fs.existsSync('docs/API.md')).toBe(true);
-        expect(fs.existsSync('docs/USER_GUIDE.md')).toBe(true);
-        expect(fs.existsSync('docs/DEPLOYMENT.md')).toBe(true);
-        expect(fs.existsSync('docs/DEVELOPMENT.md')).toBe(true);
+        expect(fs.existsSync('DOCS.md')).toBe(true);
+        expect(fs.existsSync('CHANGELOG.md')).toBe(true);
     });
 
     test('应该存在脚本文件', () => {
