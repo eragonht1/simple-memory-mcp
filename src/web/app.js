@@ -20,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 静态文件服务
 app.use(express.static(path.join(__dirname, 'public')));
+// 提供favicon文件访问
+app.use('/favicon', express.static(path.join(__dirname, 'favicon')));
 
 // 设置视图引擎
 app.set('views', path.join(__dirname, 'views'));

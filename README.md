@@ -1,4 +1,4 @@
-# Simple Memory MCP
+# ![Simple Memory MCP](./src/web/favicon/16.png) Simple Memory MCP
 
 [English](#english) | [中文](#中文)
 
@@ -9,10 +9,32 @@
 ### Overview
 
 Simple Memory MCP is a memory management system designed for AI assistants, implementing the Model Context Protocol (MCP) to provide persistent memory storage and retrieval capabilities.
+
+![Simple Memory MCP](./src/web/favicon/32.png)
 ![image](./image/A1.png)
+### Common Usage Methods-Features
+
+#### 1. Open Web Management Interface
+Tell your AI assistant: "Open memory" or "Open memory WEB", the AI will:
+- Automatically start the web server
+- Open the default browser
+- Display the visual management interface
+
+#### 2. Get Memory List
+Tell your AI assistant: "Get all memories" or "Show memory list", the AI will execute the `list_memory_titles` tool to retrieve all memory titles.
+
+#### 3. Get Specific Memory Content
+Tell your AI assistant: "Get 'XXX' memory content and execute", the AI will execute the `get_memory_by_title` tool to retrieve the complete content of the specified memory.
+
+#### 4. Store New Memory
+Tell your AI assistant: "Help me store a memory", the AI will:
+- First ask you to provide the memory title
+- Then ask you to input the memory content
+- Execute the `store_memory` tool to complete storage
+
 ### Features
 
-- **🧠 Smart Memory Storage**: AI assistants must first ask users for memory titles, then request content
+- **![Feature Icon](./src/web/favicon/16.png) Smart Memory Storage**: AI assistants must first ask users for memory titles, then request content
 - **📋 Efficient Retrieval**: Optimized MCP tools return only essential data (title + timestamp) for better performance
 - **🌐 Web Management Interface**: Intuitive visual management with full CRUD operations
 - **🔍 Full-text Search**: Search through both titles and content
@@ -226,10 +248,32 @@ which open
 ### 概述
 
 Simple Memory MCP 是一个专为AI助手设计的记忆管理系统，实现了模型上下文协议（MCP），为AI助手提供持久化记忆存储和检索功能。
+
+![Simple Memory MCP](./src/web/favicon/32.png)
 ![image](./image/A1.png)
+### 常见使用方法-功能特性
+
+#### 1. 开启Web管理界面
+对AI助手说："开启记忆"或"打开记忆WEB"，AI会：
+- 自动启动Web服务器
+- 打开默认浏览器
+- 显示可视化管理界面
+
+#### 2. 获取记忆列表
+对AI助手说："获取所有记忆"或"显示记忆列表"，AI会执行 `list_memory_titles` 工具获取所有记忆标题。
+
+#### 3. 获取特定记忆内容
+对AI助手说："获取'XXX'记忆内容并执行"，AI会执行 `get_memory_by_title` 工具获取指定记忆的完整内容。
+
+#### 4. 存储新记忆
+对AI助手说："帮我存储一个记忆"，AI会：
+- 先要求您提供记忆标题
+- 再要求您输入记忆内容
+- 执行 `store_memory` 工具完成存储
+
 ### 功能特性
 
-- **🧠 智能记忆存储**: AI助手必须先要求用户提供记忆标题，再要求输入内容
+- **![功能图标](./src/web/favicon/16.png) 智能记忆存储**: AI助手必须先要求用户提供记忆标题，再要求输入内容
 - **📋 高效检索**: 优化的MCP工具只返回必要数据（标题+时间戳），提升性能
 - **🌐 Web管理界面**: 直观的可视化管理界面，支持完整的增删改查操作
 - **🔍 全文搜索**: 支持标题和内容的关键词搜索
@@ -443,5 +487,7 @@ which open
 
 MIT License
 
-**Simple Memory MCP** - 让AI助手拥有持久记忆的能力 🧠✨
-**Simple Memory MCP** - Giving AI assistants persistent memory capabilities 🧠✨
+**Simple Memory MCP** - 让AI助手拥有持久记忆的能力 💾✨
+**Simple Memory MCP** - Giving AI assistants persistent memory capabilities 💾✨
+
+---

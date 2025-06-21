@@ -1,4 +1,6 @@
-# Simple Memory MCP 完整文档
+# ![Simple Memory MCP](./src/web/favicon/16.png) Simple Memory MCP 完整文档
+
+![Simple Memory MCP](./src/web/favicon/32.png)
 
 ## 目录
 - [API文档](#api文档)
@@ -709,4 +711,19 @@ A: 尝试使用不同的关键词，搜索会匹配标题和内容
 
 ---
 
-*Simple Memory MCP - 让AI助手拥有持久记忆的能力 🧠✨*
+*Simple Memory MCP - 让AI助手拥有持久记忆的能力 💾✨*
+
+## 图标资源
+
+项目包含自定义PNG图标，位于 `src/web/favicon/` 目录：
+
+### 图标规格
+- **16.png** (16x16像素) - 浏览器标签页小图标，用于favicon显示
+- **32.png** (32x32像素) - 浏览器标签页标准图标和书签图标，主要favicon
+- **42.png** (42x42像素) - Web界面页面标题logo，显示在应用栏左侧
+
+### 技术特性
+- **格式**: PNG格式，支持透明背景
+- **设计**: 镂空效果，适配暗色主题
+- **用途**: 提升品牌识别度和用户体验
+- **兼容性**: 支持所有现代浏览器的favicon显示需求
