@@ -74,7 +74,6 @@
     "testMatch": [
       "**/tests/**/*.test.js"
     ],
-    "extensionsToTreatAsEsm": [".js"],
     "globals": {
       "jest": {
         "useESM": true
