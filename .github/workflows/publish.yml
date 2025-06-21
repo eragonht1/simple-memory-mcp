@@ -46,7 +46,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create GitHub release comment
+      - name: Update GitHub release description
         uses: actions/github-script@v7
         with:
           script: |
@@ -56,9 +56,9 @@ jobs:
               tag: context.ref.replace('refs/tags/', '')
             });
             
-            await github.rest.issues.createComment({
+            await github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: release.id,
-              body: '🎉 Package successfully published to npm! \n\n📦 Install: `npm install simple-memory-mcp`'
+              release_id: release.id,
+              body: (release.body || '') + '\n\n🎉 Package successfully published to npm!\n\n📦 Install: `npm install simple-memory-mcp`'
             });
