@@ -47,7 +47,7 @@ async function initDatabase() {
 app.get('/', async (req, res) => {
     try {
         await initDatabase();
-        const memories = await database.getMemoryTitles();
+        const memories = await database.getMemoryTitlesWithPreview();
         res.sendFile(path.join(__dirname, 'views', 'index.html'));
     } catch (error) {
         console.error('获取记忆列表失败:', error);
@@ -61,7 +61,7 @@ app.get('/', async (req, res) => {
 app.get('/api/memories', async (req, res) => {
     try {
         await initDatabase();
-        const memories = await database.getMemoryTitles();
+        const memories = await database.getMemoryTitlesWithPreview();
         res.json({ success: true, memories });
     } catch (error) {
         console.error('获取记忆列表失败:', error);

@@ -5,16 +5,13 @@
  * 跨平台启动脚本，支持Windows、Linux、macOS
  */
 
-import { spawn, exec } from 'child_process';
-import { promisify } from 'util';
+import { spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const execAsync = promisify(exec);
 
 // 颜色输出
 const colors = {
@@ -88,76 +85,8 @@ function checkDatabase() {
     }
 }
 
-// 检测并清理已有的MCP服务器进程
-async function checkAndCleanExistingProcesses() {
-    log('🔍 检测现有MCP服务器进程...', 'cyan');
-
-    try {
-        let command;
-        if (process.platform === 'win32') {
-            // Windows: 查找node进程中包含server.js的
-            command = 'wmic process where "name=\'node.exe\'" get commandline,processid /format:csv';
-        } else {
-            // Linux/macOS: 查找包含server.js的node进程
-            command = 'ps aux | grep "[n]ode.*server.js"';
-        }
-
-        const { stdout } = await execAsync(command);
-
-        if (stdout.trim()) {
-            const lines = stdout.trim().split('\n');
-            let foundProcess = false;
-            
-            for (const line of lines) {
-                if (line.includes('server.js') && line.includes('simple-memory-mcp')) {
-                    foundProcess = true;
-                    log('⚠️ 发现已运行的MCP服务器进程，正在清理...', 'yellow');
-                    
-                    if (process.platform === 'win32') {
-                        // Windows处理
-                        const parts = line.split(',');
-                        if (parts.length >= 3) {
-                            const pid = parts[2].trim();
-                            if (pid && !isNaN(pid)) {
-                                try {
-                                    await execAsync(`taskkill /PID ${pid} /F`);
-                                    log(`✅ 已终止进程 ${pid}`, 'green');
-                                } catch (error) {
-                                    log(`⚠️ 无法终止进程 ${pid}`, 'yellow');
-                                }
-                            }
-                        }
-                    } else {
-                        // Linux/macOS处理
-                        const parts = line.trim().split(/\s+/);
-                        const pid = parts[1];
-                        if (pid && !isNaN(pid)) {
-                            try {
-                                await execAsync(`kill -9 ${pid}`);
-                                log(`✅ 已终止进程 ${pid}`, 'green');
-                            } catch (error) {
-                                log(`⚠️ 无法终止进程 ${pid}`, 'yellow');
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
-            
-            if (foundProcess) {
-                // 等待进程完全终止
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                log('✅ 进程清理完成', 'green');
-            } else {
-                log('✅ 未发现冲突的MCP服务器进程', 'green');
-            }
-        } else {
-            log('✅ 未发现冲突的MCP服务器进程', 'green');
-        }
-    } catch (error) {
-        log('ℹ️ 进程检测完成（未发现冲突进程）', 'cyan');
-    }
-}
+// 注意：已移除进程清理逻辑以支持多个AI助手同时使用
+// MCP协议天然支持多实例，每个AI助手可以独立启动自己的MCP服务器进程
 
 // 启动MCP服务器
 function startMCPServer() {
@@ -165,6 +94,7 @@ function startMCPServer() {
     log('📡 MCP服务器正在监听标准输入/输出', 'bright');
     log('💡 按 Ctrl+C 停止服务器', 'yellow');
     log('🔗 配置AI助手时请使用此脚本的完整路径', 'cyan');
+    log('✨ 支持多个AI助手同时使用（Claude、Augment等）', 'green');
     console.log('');
     
     const serverPath = path.join(__dirname, 'src', 'server.js');
@@ -226,6 +156,8 @@ function showConfigurationInfo() {
     log('```', 'reset');
     log('', 'reset');
     log('💡 提示: 请将上述路径替换为你的实际项目路径', 'yellow');
+    log('🎯 多助手支持: 可在Claude、Augment等多个AI助手中同时配置', 'green');
+    log('📝 建议: 为不同助手使用不同的服务器名称以便区分', 'cyan');
     log('=' .repeat(50), 'cyan');
     log('', 'reset');
 }
@@ -239,7 +171,8 @@ async function main() {
         checkNodeVersion();
         checkRequiredFiles();
         checkDatabase();
-        await checkAndCleanExistingProcesses();
+        // 移除进程清理逻辑，允许多个AI助手同时使用
+        // await checkAndCleanExistingProcesses();
         showConfigurationInfo();
         startMCPServer();
     } catch (error) {

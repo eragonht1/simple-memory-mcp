@@ -339,6 +339,14 @@ html, body {
     background: rgba(255,255,255,0.1);
 }
 
+.action-btn.copy {
+    color: #4caf50;
+}
+
+.action-btn.copy:hover {
+    background: rgba(76, 175, 80, 0.1);
+}
+
 .action-btn.edit {
     color: #ff9800;
 }
@@ -447,7 +455,8 @@ html, body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 29px;
+    height: 55px;
+    padding: 0 29px;
     border-bottom: 1px solid #333;
 }
 
@@ -568,8 +577,10 @@ html, body {
 .form-actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 12px;
-    padding: 24px 29px;
+    height: 70px;
+    padding: 0 29px;
     border-top: 1px solid #333;
 }
 
@@ -747,6 +758,8 @@ html, body {
 
     .form-actions {
         flex-direction: column;
+        height: auto;
+        padding: 16px;
     }
 
     .form-actions .btn {
@@ -795,9 +808,17 @@ html, body {
         margin: 5% auto;
     }
 
-    .modal-header,
-    .modal-body,
+    .modal-header {
+        height: 55px;
+        padding: 0 16px;
+    }
+
+    .modal-body {
+        padding: 16px;
+    }
+
     .form-actions {
+        height: auto;
         padding: 16px;
     }
 }

@@ -13,10 +13,11 @@ Simple Memory MCP is a memory management system designed for AI assistants, impl
 ### Features
 
 - **🧠 Smart Memory Storage**: AI assistants must first ask users for memory titles, then request content
-- **📋 Efficient Retrieval**: Display title lists first, users select to get complete content
+- **📋 Efficient Retrieval**: Optimized MCP tools return only essential data (title + timestamp) for better performance
 - **🌐 Web Management Interface**: Intuitive visual management with full CRUD operations
 - **🔍 Full-text Search**: Search through both titles and content
 - **🎯 Intelligent Port Management**: Automatic port detection and conflict resolution
+- **📱 Responsive Design**: Optimized for both desktop and mobile devices
 
 ### Quick Start
 
@@ -156,8 +157,12 @@ The AI will automatically:
 #### Through Web Interface
 1. Click "➕ Add Memory" to create new memories
 2. Click memory cards to view details
-3. Use the search box to find specific content
-4. Edit or delete memories as needed
+3. Use action buttons on each memory card:
+   - **Edit** (🖊️) - Modify memory content
+   - **Copy** (📋) - Copy title and content to clipboard in plain text
+   - **Delete** (🗑️) - Remove memory permanently
+4. Use the search box to find specific content
+5. Drag and drop memory cards to reorder them
 
 ### MCP Tools
 
@@ -225,10 +230,11 @@ Simple Memory MCP 是一个专为AI助手设计的记忆管理系统，实现了
 ### 功能特性
 
 - **🧠 智能记忆存储**: AI助手必须先要求用户提供记忆标题，再要求输入内容
-- **📋 高效检索**: 先展示标题列表，用户选择后获取完整内容
+- **📋 高效检索**: 优化的MCP工具只返回必要数据（标题+时间戳），提升性能
 - **🌐 Web管理界面**: 直观的可视化管理界面，支持完整的增删改查操作
 - **🔍 全文搜索**: 支持标题和内容的关键词搜索
 - **🎯 智能端口管理**: 自动端口检测和冲突解决
+- **📱 响应式设计**: 针对桌面端和移动端进行优化
 
 ### 快速开始
 
@@ -326,12 +332,13 @@ npm run web
   "mcpServers": {
     "simple-memory": {
       "command": "node",
-      "args": ["./start-mcp.js"],
+      "args": ["/path/to/your/simple-memory-mcp/start-mcp.js"],
       "cwd": "/path/to/your/simple-memory-mcp"
     }
   }
 }
 ```
+
 
 **配置步骤：**
 1. 将 `/path/to/your/simple-memory-mcp` 替换为你的实际项目路径
@@ -368,8 +375,12 @@ AI将自动：
 #### 通过Web界面使用
 1. 点击"➕ 添加记忆"创建新记忆
 2. 点击记忆卡片查看详情
-3. 使用搜索框查找特定内容
-4. 根据需要编辑或删除记忆
+3. 使用每个记忆卡片上的操作按钮：
+   - **编辑** (🖊️) - 修改记忆内容
+   - **复制** (📋) - 将标题和内容以纯文本格式复制到剪贴板
+   - **删除** (🗑️) - 永久删除记忆
+4. 使用搜索框查找特定内容
+5. 拖拽记忆卡片可以重新排序
 
 ### MCP工具
 

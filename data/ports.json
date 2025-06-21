@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-06-20T07:32:33.665Z",
+  "timestamp": "2025-06-21T01:51:41.929Z",
   "ttl": 86400000,
   "ports": {
     "web": {
       "port": 8011,
       "service": "web",
-      "allocatedAt": "2025-06-20T07:32:33.663Z",
+      "allocatedAt": "2025-06-21T01:51:41.929Z",
       "config": {
         "name": "Web管理界面",
         "preferred": 8011,

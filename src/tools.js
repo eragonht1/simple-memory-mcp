@@ -179,13 +179,12 @@ export class ToolExecutor {
     async executeListMemoryTitles() {
         try {
             const memories = await this.database.getMemoryTitles();
-            
+
             return {
                 success: true,
                 titles: memories.map(memory => ({
                     title: memory.title,
-                    created_at: memory.created_at,
-                    preview: memory.preview + (memory.preview.length >= 100 ? '...' : '')
+                    created_at: memory.created_at
                 })),
                 count: memories.length
             };

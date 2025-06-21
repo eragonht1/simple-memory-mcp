@@ -151,10 +151,32 @@ class Database {
     }
 
     /**
-     * 获取所有记忆标题
+     * 获取所有记忆标题（MCP工具专用，不包含preview）
      * @returns {Promise<Array>} 标题列表
      */
     async getMemoryTitles() {
+        const sql = `
+            SELECT id, title, created_at, sort_order
+            FROM memories
+            ORDER BY sort_order ASC, created_at DESC
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.all(sql, [], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    /**
+     * 获取所有记忆标题（Web界面专用，包含preview）
+     * @returns {Promise<Array>} 标题列表（包含preview）
+     */
+    async getMemoryTitlesWithPreview() {
         const sql = `
             SELECT id, title, created_at, sort_order,
                    SUBSTR(content, 1, 100) as preview

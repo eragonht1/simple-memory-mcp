@@ -145,6 +145,10 @@ class MemoryManager {
                         <span class="material-icons" style="font-size: 16px;">edit</span>
                         编辑
                     </button>
+                    <button class="action-btn copy" onclick="memoryManager.copyMemory('${this.escapeHtml(memory.title)}')">
+                        <span class="material-icons" style="font-size: 16px;">content_copy</span>
+                        复制
+                    </button>
                     <button class="action-btn delete" onclick="memoryManager.deleteMemory('${this.escapeHtml(memory.title)}')">
                         <span class="material-icons" style="font-size: 16px;">delete</span>
                         删除
@@ -184,6 +188,52 @@ class MemoryManager {
         this.showMemoryModal();
     }
 
+    async copyMemory(title) {
+        try {
+            const response = await fetch(`/api/memories/${encodeURIComponent(title)}`);
+            const data = await response.json();
+
+            if (data.success) {
+                // 格式化为纯文本格式：标题 + 换行 + 内容
+                const textToCopy = `${data.memory.title}\n\n${data.memory.content}`;
+
+                // 使用现代剪贴板API复制文本
+                await navigator.clipboard.writeText(textToCopy);
+                this.showMessage('记忆内容已复制到剪贴板', 'success');
+            } else {
+                this.showMessage('获取记忆内容失败: ' + data.error, 'error');
+            }
+        } catch (error) {
+            console.error('复制记忆失败:', error);
+            // 如果剪贴板API失败，尝试使用传统方法
+            try {
+                const response = await fetch(`/api/memories/${encodeURIComponent(title)}`);
+                const data = await response.json();
+                if (data.success) {
+                    const textToCopy = `${data.memory.title}\n\n${data.memory.content}`;
+                    this.fallbackCopyToClipboard(textToCopy);
+                    this.showMessage('记忆内容已复制到剪贴板', 'success');
+                }
+            } catch (fallbackError) {
+                this.showMessage('复制失败，请手动复制内容', 'error');
+            }
+        }
+    }
+
+    // 备用复制方法（兼容旧浏览器）
+    fallbackCopyToClipboard(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    }
+
     async editMemory(title) {
         try {
             const response = await fetch(`/api/memories/${encodeURIComponent(title)}`);
@@ -206,11 +256,13 @@ class MemoryManager {
 
     editFromView() {
         if (this.currentViewingMemory) {
+            // 先保存当前查看的记忆，避免hideViewModal()将其设为null
+            const memoryToEdit = this.currentViewingMemory;
             this.hideViewModal();
             document.getElementById('modalTitle').textContent = '编辑记忆';
-            document.getElementById('memoryTitleInput').value = this.currentViewingMemory.title;
-            document.getElementById('memoryContentInput').value = this.currentViewingMemory.content;
-            this.currentEditingMemory = this.currentViewingMemory;
+            document.getElementById('memoryTitleInput').value = memoryToEdit.title;
+            document.getElementById('memoryContentInput').value = memoryToEdit.content;
+            this.currentEditingMemory = memoryToEdit;
             this.showMemoryModal();
         }
     }
@@ -458,23 +510,19 @@ class MemoryManager {
 
     formatDate(dateString) {
         const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 1) {
-            return '今天';
-        } else if (diffDays === 2) {
-            return '昨天';
-        } else if (diffDays <= 7) {
-            return `${diffDays - 1} 天前`;
-        } else {
-            return date.toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-        }
+        // 格式化为 "2025年6月21日 18:24" 的格式（24小时制）
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+
+        // 24小时制，小时和分钟都补零
+        const displayHours = hours.toString().padStart(2, '0');
+        const displayMinutes = minutes.toString().padStart(2, '0');
+
+        return `${year}年${month}月${day}日 ${displayHours}:${displayMinutes}`;
     }
 
     // 拖拽处理方法

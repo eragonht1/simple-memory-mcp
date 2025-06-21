@@ -57,8 +57,7 @@ Simple Memory MCP 提供两套API：
   "titles": [
     {
       "title": "记忆标题",
-      "created_at": "2025-06-16 22:46:07",
-      "preview": "内容预览..."
+      "created_at": "2025-06-16 22:46:07"
     }
   ],
   "count": 1
