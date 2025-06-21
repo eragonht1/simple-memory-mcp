@@ -3,8 +3,8 @@
  */
 
 // 简单的测试，验证项目结构
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 describe('Simple Memory MCP 项目结构测试', () => {
     test('应该存在必要的项目文件', () => {
@@ -34,8 +34,8 @@ describe('Simple Memory MCP 项目结构测试', () => {
         expect(packageJson.name).toBe('simple-memory-mcp');
         expect(packageJson.type).toBe('module');
         expect(packageJson.main).toBe('src/server.js');
-        expect(packageJson.scripts.start).toBe('node src/server.js');
-        expect(packageJson.scripts.web).toBe('node src/web/app.js');
+        expect(packageJson.scripts.start).toBe('node start-mcp.js');
+        expect(packageJson.scripts.web).toBe('node start-web.js');
     });
 });
 

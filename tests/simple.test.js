@@ -3,7 +3,7 @@
  * 使用CommonJS语法以避免Jest ES模块问题
  */
 
-const os = require('os');
+import os from 'os';
 
 describe('简单功能验证', () => {
     test('应该能够检测操作系统', () => {

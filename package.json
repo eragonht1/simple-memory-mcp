@@ -5,21 +5,13 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "web": "node src/web/app.js",
-    "web:start": "node start-web.js",
-    "dev:web": "nodemon src/web/app.js",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch",
-    "init-db": "node scripts/init-database.js",
+    "start": "node start-mcp.js",
+    "web": "node start-web.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "deploy": "node scripts/deploy.js",
-    "build": "npm run init-db",
-    "prepublishOnly": "npm test && npm run build",
-    "prepack": "npm run init-db",
-    "audit": "npm audit",
-    "audit:fix": "npm audit fix"
+    "verify-publish": "node scripts/verify-publish-ready.js"
   },
   "keywords": [
     "mcp",
@@ -72,11 +64,12 @@
   "jest": {
     "testEnvironment": "node",
     "testMatch": [
-      "**/tests/**/*.test.js"
+      "**/tests/**/*.test.js",
+      "**/__tests__/**/*.js"
     ],
     "transform": {},
     "moduleNameMapper": {
-      "^(\\.{1,2}/.*)\\.js$": "$1"
+      "^@/(.*)$": "<rootDir>/src/$1"
     }
   }
 }
