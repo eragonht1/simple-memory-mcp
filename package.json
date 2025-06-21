@@ -1,6 +1,6 @@
 {
   "name": "simple-memory-mcp",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "A Model Context Protocol (MCP) server for managing user memories with web interface",
   "main": "src/server.js",
   "type": "module",
