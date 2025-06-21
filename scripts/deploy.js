@@ -9,6 +9,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
+import { createServer } from 'net';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,7 +95,7 @@ class Deployer {
     async initializeDatabase() {
         console.log('\n🗄️ 初始化数据库...');
         
-        await this.runCommand('npm', ['run', 'init-db'], { cwd: projectRoot });
+        await this.runCommand('npm', ['run', 'build'], { cwd: projectRoot });
         console.log('✓ 数据库初始化完成');
     }
 
@@ -250,7 +251,7 @@ Linux/macOS用户:
 
     async isPortInUse(port) {
         return new Promise((resolve) => {
-            const server = require('net').createServer();
+            const server = createServer();
             
             server.listen(port, () => {
                 server.once('close', () => resolve(false));

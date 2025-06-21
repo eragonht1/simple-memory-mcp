@@ -12,7 +12,8 @@
     "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "build": "node scripts/init-database.js",
     "deploy": "node scripts/deploy.js",
-    "verify-publish": "node scripts/verify-publish-ready.js"
+    "verify-publish": "node scripts/verify-publish-ready.js",
+    "prepublishOnly": "npm test && npm run build && npm run verify-publish"
   },
   "keywords": [
     "mcp",

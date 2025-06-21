@@ -25,7 +25,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
@@ -48,7 +48,10 @@ jobs:
       - name: Test package installation
         run: |
           npm pack
-          npm install -g ./simple-memory-mcp-*.tgz
+          mkdir test-install
+          cd test-install
+          npm init -y
+          npm install ../simple-memory-mcp-*.tgz
         shell: bash
 
       - name: Upload coverage to Codecov (Ubuntu + Node 18 only)
