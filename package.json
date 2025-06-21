@@ -71,7 +71,6 @@
   "homepage": "https://github.com/eragonht1/simple-memory-mcp#readme",
   "jest": {
     "testEnvironment": "node",
-    "extensionsToTreatAsEsm": [".js"],
     "testMatch": [
       "**/tests/**/*.test.js"
     ],
