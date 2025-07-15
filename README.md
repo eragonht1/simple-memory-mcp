@@ -47,6 +47,8 @@ Tell your AI assistant: "Help me store a memory", the AI will:
 - **🔍 Full-text Search**: Search through both titles and content
 - **🎯 Intelligent Port Management**: Automatic port detection and conflict resolution
 - **📱 Responsive Design**: Optimized for both desktop and mobile devices
+- **🔒 Single Instance Design**: Automatic detection prevents multiple server instances
+- **🤝 Multi-AI Support**: Multiple AI assistants can safely share the same server instance
 
 ### Quick Start
 
@@ -157,6 +159,21 @@ Use the following configuration template for any AI assistant that supports MCP:
 3. Restart your AI assistant to load the new configuration
 
 **Note:** The `start-mcp.js` script provides better error handling and user-friendly output compared to directly calling `src/server.js`.
+
+#### 🔒 Single Instance Design
+
+Simple Memory MCP uses a **single instance design** to ensure optimal resource usage and data consistency:
+
+- **Automatic Detection**: Before starting, the system checks if an MCP server is already running
+- **Smart Sharing**: Multiple AI assistants (Claude, Augment, etc.) can safely share the same server instance
+- **Resource Efficiency**: Prevents duplicate server processes and database conflicts
+- **Seamless Experience**: If a server is already running, new AI connections will automatically use the existing instance
+
+**Multi-AI Workflow:**
+1. **First AI starts** → Detects no server → Starts new MCP server → Connects successfully
+2. **Second AI starts** → Detects existing server → Shows friendly message → Connects to existing instance
+3. **Both AIs can use memory functions simultaneously** without conflicts
+4. **When all AIs close** → MCP server automatically shuts down to free resources
 
 ### Usage Examples
 
@@ -286,6 +303,8 @@ Simple Memory MCP 是一个专为AI助手设计的记忆管理系统，实现了
 - **🔍 全文搜索**: 支持标题和内容的关键词搜索
 - **🎯 智能端口管理**: 自动端口检测和冲突解决
 - **📱 响应式设计**: 针对桌面端和移动端进行优化
+- **🔒 单实例设计**: 自动检测机制防止多个服务器实例冲突
+- **🤝 多AI支持**: 多个AI助手可以安全地共享同一个服务器实例
 
 ### 快速开始
 
@@ -397,6 +416,21 @@ npm run web
 3. 重启你的AI助手以加载新配置
 
 **注意：** `start-mcp.js` 脚本相比直接调用 `src/server.js` 提供了更好的错误处理和用户友好的输出信息。
+
+#### 🔒 单实例设计
+
+Simple Memory MCP 采用**单实例设计**，确保最佳的资源使用和数据一致性：
+
+- **自动检测**: 启动前系统会检查是否已有MCP服务器在运行
+- **智能共享**: 多个AI助手（Claude、Augment等）可以安全地共享同一个服务器实例
+- **资源高效**: 防止重复的服务器进程和数据库冲突
+- **无缝体验**: 如果服务器已在运行，新的AI连接会自动使用现有实例
+
+**多AI工作流程：**
+1. **第一个AI启动** → 检测无服务器 → 启动新MCP服务器 → 成功连接
+2. **第二个AI启动** → 检测到现有服务器 → 显示友好提示 → 连接到现有实例
+3. **两个AI可以同时使用记忆功能** 而不会产生冲突
+4. **当所有AI关闭时** → MCP服务器自动关闭以释放资源
 
 ### 使用示例
 
